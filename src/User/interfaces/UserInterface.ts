@@ -1,0 +1,21 @@
+export interface User {
+    id: number,
+    uuid: string,
+    role: number,
+    name: string,
+    firstSurname: string | null,
+    secondSurname:string  | null,
+    email: string,
+    age: null,
+    gender: string | null,
+    password: string,
+    lang: string,
+    apiKey: string,
+    emailVerifiedAt: null,
+    rememberToken: null,
+    lastLogin: string,
+    active: number,
+    verified: number,
+    createdAt: string,
+    updatedAt: string
+}
