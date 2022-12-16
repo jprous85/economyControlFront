@@ -1,23 +1,18 @@
 import {useContext} from "react";
-import {AuthContext} from "../context/authContext";
-import {Route, Redirect} from "react-router-dom";
+import {AuthContext} from "../Auth/contexts/authContext";
+import {Outlet, Navigate} from "react-router-dom";
+import {getLocalStorageComplexData} from "../Shared/Infrastructure/Persistence/localStorageComplexData";
 
 
-const PrivateRoute = ({children, ...rest}: any) => {
+const PrivateRoutes = () => {
 
-    const {authState} = useContext(AuthContext);
+    const {complexData} = useContext(AuthContext);
 
-    return (
-        <Route {...rest}>
-            {
-                !authState.accessToken
-                ?
-                <Redirect to={'/login'}/>
-                :
-                children
-            }
-        </Route>
-    )
+    const scope = getLocalStorageComplexData();
+
+    const exist = (scope) ? scope.scope.includes('admin') : false;
+
+    return ((complexData.accessToken && exist) ? <Outlet/> : <Navigate to={'/login'}/>)
 }
 
-export default PrivateRoute;
+export default PrivateRoutes;

@@ -1,30 +1,26 @@
-import {User} from "../../Domain/interfaces/UserInterface";
+import {UserInterface} from "../interfaces/UserInterface";
 
-const userAdapter = (response: any): User | null => {
+const userAdapter = (response: any): UserInterface | [] => {
     if (response) {
-        return <User>{
-            id: response.data.id,
-            uuid: response.data.uuid,
-            role: response.data.role,
-            name: response.data.name,
-            firstSurname: response.data.first_surname,
-            secondSurname: response.data.second_surname,
-            email: response.data.email,
-            age: response.data.age,
-            gender: response.data.gender,
-            password: response.data.password,
-            lang: response.data.lang,
-            apiKey: response.data.api_key,
-            emailVerifiedAt: response.data.email_verified_at,
-            rememberToken: response.data.remember_token,
-            lastLogin: response.data.last_login,
-            active: response.data.active,
-            verified: response.data.verified,
-            createdAt: response.data.created_at,
-            updatedAt: response.data.updated_at
+        return <UserInterface>{
+            id: response.id,
+            uuid: response.uuid,
+            role: response.role,
+            name: response.name,
+            firstSurname: response.first_surname,
+            secondSurname: response.second_surname,
+            email: response.email,
+            age: response.age,
+            gender: response.gender,
+            lang: response.lang,
+            lastLogin: response.last_login,
+            active: response.active,
+            verified: response.verified,
+            createdAt: response.created_at,
+            updatedAt: response.updated_at
         }
     }
-    return null;
+    return [];
 }
 
 export default userAdapter;

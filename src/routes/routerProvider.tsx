@@ -1,54 +1,37 @@
-import React, {useState} from 'react';
-import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
-import Admin from "./admin/admin";
-import NoMatches from "../pages/NoMatches";
-import Home from "../pages/HomePage/Home";
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
+import {ThemeProvider} from "../context/themeContext";
+import {AuthProvider} from "../Auth/contexts/authProvider";
 
-const Routes = () => {
+import PrivateRoutes from './privateRoutes';
 
-    const [uid, setUid] = useState(() => {
-        return window.localStorage.getItem('c_uid') || false;
-    });
+import User from "../User/components/User";
+import GuessRoutes from './guessRoutes';
+import Login from "../Auth/components/Login";
 
-    const ADMIN_PATH = [
-        "/admin",
-        "/admin/create"
-    ];
+const Routers = () => {
 
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route exact path={"/"}>
-                    <Home setUid={setUid}/>
-                </Route>
-                <PrivateRoute exact path={ADMIN_PATH} auth={uid}>
-                    <Route path={ADMIN_PATH} component={Admin}/>
-                </PrivateRoute>
-                <Route path={"*"} component={NoMatches}/>
-            </Switch>
-        </BrowserRouter>
+        <ThemeProvider>
+            <AuthProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="login" element={<Login/>}/>
+
+                        <Route element={<GuessRoutes/>}>
+
+                            <Route element={<PrivateRoutes/>}>
+                                <Route path="users" element={<User/>}/>
+                            </Route>
+
+                        </Route>
+
+                        <Route path={'*'} element={<div>Not Found</div>}/>
+                    </Routes>
+                </BrowserRouter>
+            </AuthProvider>
+        </ThemeProvider>
     );
 }
 
-const PrivateRoute = ({children, auth, ...rest}) => {
-    return (
-        <Route
-            {...rest}
-            render={({location}) =>
-                auth ? (
-                    children
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: "/",
-                            state: {from: location}
-                        }}
-                    />
-                )
-            }
-        />
-    );
-}
-
-export default Routes;
+export default Routers;

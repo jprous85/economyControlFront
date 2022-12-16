@@ -4,7 +4,7 @@ import {
     saveLocalStorageComplexData,
     saveLocalStorageSimpleComplexData
 } from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
-import getUser from "../../User/Infrastructure/persistence/getUser";
+import getUser from "../../User/hooks/getUser";
 
 interface props {
     email: string,
@@ -13,7 +13,7 @@ interface props {
     setError: Function
 }
 
-const LoginRequest = async ({email, password, complex, setError}: props) => {
+const LoginHook = async ({email, password, complex, setError}: props) => {
     await httpRequest('post', '/login', {
         email,
         password
@@ -46,4 +46,4 @@ const LoginRequest = async ({email, password, complex, setError}: props) => {
 
 }
 
-export default LoginRequest;
+export default LoginHook;

@@ -1,25 +1,22 @@
-import BaseLayout from "../Shared/layouts/baseLayout";
-import {useContext} from "react";
-import {AuthContext} from "../Auth/contexts/authContext";
-import getAllUsers from "./hooks/getAllUsers";
+import {useEffect, useState} from "react";
+import getAllUsers from "../hooks/getAllUsers";
+import UserView from "../views/UserView";
+import {UserInterface} from "../interfaces/UserInterface";
 
 const User = () => {
+    const [users, setUsers] = useState<Array<UserInterface>>([]);
 
-    const context = useContext(AuthContext);
+    useEffect(() => {
+        getAllUsers().then(response => {
+            setUsers(response);
+        });
+    }, []);
 
-    getAllUsers().then(response => {
-        console.log(response);
-    });
-
-    return(
-        <BaseLayout>
-            <div className={'row'}>
-                <div className="col-md-12">
-                    User
-                </div>
-            </div>
-        </BaseLayout>
+    console.log(users);
+    return (
+        <UserView users={users} />
     );
+
 }
 
 export default User;

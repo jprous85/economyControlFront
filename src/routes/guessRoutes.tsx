@@ -1,13 +1,19 @@
-import {useContext} from "react";
-import {AuthContext} from "../context/authContext";
-import {Outlet, Navigate} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
+import {getLocalStorageComplexData} from "../Shared/Infrastructure/Persistence/localStorageComplexData";
+
+const GuessRoutes = () => {
+
+    const SCOPES = [
+        'admin',
+        'guest'
+    ];
 
 
-const PrivateRoutes = () => {
+    const scope = getLocalStorageComplexData();
 
-    const {authState} = useContext(AuthContext);
+    const exist = (scope) ? scope.scope.map((sc: string) => SCOPES.includes(sc)) : false;
 
-    return ( authState.accessToken ? <Outlet/> : <Navigate to={'/login'}/>)
+    return ( exist ) ? <Outlet/> : <Navigate to={'/login'}/>;
 }
 
-export default PrivateRoutes;
+export default GuessRoutes;

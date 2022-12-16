@@ -1,25 +1,26 @@
 import {httpRequest} from "../../Shared/Infrastructure/Persistence/HttpRequest";
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
-import UserAdapter from "../adapters/UserAdapter";
+import userAdapter from "../adapters/UserAdapter";
+import { UserInterface } from "../interfaces/UserInterface";
 
-const getUser = async (id: number) => {
+const getAllUsers = async () => {
 
     const complex = getLocalStorageComplexData();
 
-    let user = null;
+    let users: Array<UserInterface> = [];
 
-    await httpRequest('get', `/users/${id}/show`,null, complex.accessToken).then((response: any) => {
+    await httpRequest('get', `/users/read`,null, complex.accessToken).then((response: any) => {
         if (response.status === 200) {
-            const userAdapter = UserAdapter(response);
-            if (userAdapter) {
-                user = userAdapter;
-            }
+            response.data.map((data: any) => {
+                const user = userAdapter(data);
+                users.push(<UserInterface>user);
+            });
         } else {
             console.log(response.response.data.message);
         }
     });
 
-    return user;
+    return users;
 }
 
-export default getUser;
+export default getAllUsers;

@@ -1,4 +1,4 @@
 
-export interface Auth {
-    accessToken: string
+export interface Scope {
+    scope: []
 }

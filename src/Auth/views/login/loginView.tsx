@@ -1,4 +1,4 @@
-import BaseLayout from '../../../../Shared/layouts/baseLayoutLogin';
+import BaseLayout from '../../../Shared/layouts/baseLayoutLogin';
 
 interface props {
     submitLogin: Function,

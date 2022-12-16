@@ -1,5 +1,5 @@
 import {createContext} from "react";
-import { Auth } from "../../../interfaces/AuthInterface";
+import { Auth } from "../../interfaces/AuthInterface";
 
 export type AuthContextProps = {
     complexData: Auth,

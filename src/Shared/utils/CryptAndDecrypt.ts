@@ -1,6 +1,6 @@
 import * as CryptoJS from 'crypto-js';
 
-const secretPass = "XkhZG4fW2t2W";
+const secretPass = "XkhZG4fW2t2W"; // get string for env file
 
 export const encryptData = (text: string) => {
     return CryptoJS.AES.encrypt(

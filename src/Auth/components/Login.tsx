@@ -1,9 +1,9 @@
 import {useContext, useState} from "react";
 
-import {AuthContext} from "../../Domain/contexts/authContext";
+import {AuthContext} from "../contexts/authContext";
 import {useNavigate} from "react-router-dom";
 
-import LoginRequest from "../hooks/loginRequest";
+import LoginHook from "../hooks/loginHook";
 import LoginView from "../views/login/loginView";
 
 const Login = () => {
@@ -19,7 +19,7 @@ const Login = () => {
     const [error, setError] = useState('');
 
     const submitLogin = () => {
-        LoginRequest({
+        LoginHook({
             email: credentials.email,
             password: credentials.password,
             complex,

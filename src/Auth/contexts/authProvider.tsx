@@ -1,8 +1,8 @@
 import React, {useReducer} from 'react';
-import {authReducer} from "../reducers/authReducer";
-import {Auth} from "../interfaces/AuthInterface";
-import { AuthContext } from '../Auth/contexts/authContext';
-import {getLocalStorageComplexData} from "../Shared/Infrastructure/Persistence/localStorageComplexData";
+import {authReducer} from "../../reducers/authReducer";
+import {Auth} from "../../interfaces/AuthInterface";
+import { AuthContext } from './authContext';
+import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
 
 interface props {
     children: JSX.Element | JSX.Element[]
