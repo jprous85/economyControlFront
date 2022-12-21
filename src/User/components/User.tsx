@@ -4,17 +4,25 @@ import UserView from "../views/UserView";
 import {UserInterface} from "../interfaces/UserInterface";
 
 const User = () => {
+
+    const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<Array<UserInterface>>([]);
 
     useEffect(() => {
         getAllUsers().then(response => {
             setUsers(response);
+            setLoading(false);
         });
     }, []);
 
-    console.log(users);
     return (
-        <UserView users={users} />
+        <UserView
+            loading={loading}
+            setLoading={setLoading}
+            users={users}
+            setUsers={setUsers}
+            getAllUsers={getAllUsers}
+        />
     );
 
 }

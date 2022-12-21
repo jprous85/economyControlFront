@@ -1,7 +1,8 @@
 import * as CryptoJS from 'crypto-js';
 import env from "react-dotenv";
 
-const secretPass = env.CRYPTO_TOKEN; // get string for env file
+
+const secretPass = env.CRYPTO_TOKEN;
 
 export const encryptData = (text: string) => {
     return CryptoJS.AES.encrypt(

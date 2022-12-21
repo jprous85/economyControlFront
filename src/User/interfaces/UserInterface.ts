@@ -1,21 +1,17 @@
 export interface UserInterface {
-    id: number,
+    id: number | null,
     uuid: string,
-    role: number,
+    roleId: number,
     name: string,
     firstSurname: string | null,
     secondSurname:string  | null,
     email: string,
-    age: null,
+    age: number | null,
     gender: string | null,
-    password: string,
     lang: string,
-    apiKey: string,
-    emailVerifiedAt: null,
-    rememberToken: null,
     lastLogin: string,
     active: number,
     verified: number,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string | null
 }

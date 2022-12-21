@@ -5,7 +5,7 @@ const userAdapter = (response: any): UserInterface | [] => {
         return <UserInterface>{
             id: response.id,
             uuid: response.uuid,
-            role: response.role,
+            roleId: response.role,
             name: response.name,
             firstSurname: response.first_surname,
             secondSurname: response.second_surname,

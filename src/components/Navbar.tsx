@@ -2,6 +2,8 @@ import {useNavigate} from "react-router-dom";
 import {getLocalStorageComplexData} from "../Shared/Infrastructure/Persistence/localStorageComplexData";
 import logoutHook from "../Auth/hooks/LogoutHook";
 import {saveLocalStorage} from "../Shared/Infrastructure/Persistence/localStorage";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 const Navbar = () => {
 
@@ -59,10 +61,12 @@ const Navbar = () => {
                         <a className="nav-link" href="#">{complex.user.name}</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Config</a>
+                        <a className="nav-link" href="#"><FontAwesomeIcon icon={icon({name: 'sun', style: 'regular'})} /></a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" onClick={logout}>Logout</a>
+                        <a className="nav-link" onClick={logout} data-bs-toggle="tooltip" data-bs-placement="bottom">
+                            <FontAwesomeIcon icon={icon({name: 'right-from-bracket'})}/>
+                        </a>
                     </li>
                 </ul>
 
