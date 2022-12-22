@@ -1,4 +1,5 @@
 import Navbar from "../../components/Navbar";
+import {Container, Row} from "react-bootstrap";
 
 interface props {
     children: JSX.Element | JSX.Element[]
@@ -7,12 +8,12 @@ interface props {
 const BaseLayout = ({children}: props) => {
 
     return (
-        <div className={'container-fluid'}>
+        <Container fluid>
             <Navbar />
-            <div className="row">
+            <Row>
                 {children}
-            </div>
-        </div>
+            </Row>
+        </Container>
     );
 }
 

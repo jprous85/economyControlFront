@@ -5,12 +5,20 @@ import {ROLES_NAME_BY_ID} from "../../Shared/Constants/RolesConstants";
 
 interface props {
     users: Array<UserInterface>,
-    setUser: Function
+    setUser: Function,
+    updateUserFunction: Function,
+    deleteUserFunction: Function
 }
 
-const UsersTable = ({users, setUser}: props) => {
+const UsersTable = ({users, setUser, updateUserFunction, deleteUserFunction}: props) => {
 
     const assignUser = (user: UserInterface) => {
+        updateUserFunction();
+        return setUser(user);
+    }
+
+    const deleteUser = (user: UserInterface) => {
+        deleteUserFunction();
         return setUser(user);
     }
 
@@ -44,8 +52,6 @@ const UsersTable = ({users, setUser}: props) => {
                         <td className={''}>
                             <a href="#"
                                className="btn btn-primary"
-                               data-bs-toggle="modal"
-                               data-bs-target="#exampleModal"
                                onClick={() => assignUser(user)}
                             >
                                 <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
@@ -54,8 +60,10 @@ const UsersTable = ({users, setUser}: props) => {
                             </a>
                             &nbsp;
                             &nbsp;
-                            <a href=""
-                               className={'btn btn-danger'}>
+                            <a href="#"
+                               className="btn btn-danger"
+                               onClick={() => deleteUser(user)}
+                            >
                                 <FontAwesomeIcon icon={icon({name: 'xmark', style: 'solid'})}/>
                                 &nbsp;
                                 {'Delete'}

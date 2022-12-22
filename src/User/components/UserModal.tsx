@@ -1,25 +1,30 @@
-import Modal from "../../components/Modal";
+import SimpleModalDialog from "../../components/SimpleModalDialog";
 import {UserInterface} from "../interfaces/UserInterface";
 import {LANG} from "../../Shared/Constants/LangConstants";
 import {GENDER} from "../../Shared/Constants/GenderConstants";
 import {ROLES_ID_BY_NAME} from "../../Shared/Constants/RolesConstants";
 import {ChangeEvent} from "react";
+import { Form } from "react-bootstrap";
 
 interface props {
+    show: boolean,
+    setShow: Function,
     user: UserInterface;
     setUser: Function;
     callback: Function
 }
 
-const UserModal = ({user, setUser, callback}: props) => {
+const UserModal = ({show, setShow, user, setUser, callback}: props) => {
 
     const changeUserData = (key: string, value: any) => {
         setUser({...user, [key]: value});
     }
 
     return (
-        <Modal
+        <SimpleModalDialog
             title={'Crear usuario'}
+            show={show}
+            setShow={setShow}
             callback={callback}
             closeBtn={null}
             saveBtn={null}
@@ -36,15 +41,14 @@ const UserModal = ({user, setUser, callback}: props) => {
                                 <div className="row justify-content-end">
                                     <div className="col-md-6">
                                         <label htmlFor="user-lang">Lang</label>
-                                        <select name="" id="user-lang" className={'form-control'}
-                                                defaultValue={''}
+                                        <Form.Select name="" id="user-lang" className={'form-control'}
+                                                value={user.lang}
                                                 onChange={(e: ChangeEvent<HTMLSelectElement>) => changeUserData('lang', e.target.value)}>
-                                            <option value="">Select a lang</option>
+                                            <option>Select a lang</option>
                                             {LANG.map((lang: any) => {
-                                                return <option value={lang}
-                                                               selected={user.lang === lang}>{lang}</option>
+                                                return <option key={lang} value={lang}>{lang}</option>
                                             })}
-                                        </select>
+                                        </Form.Select>
                                     </div>
                                     <div className="col-md-2 mt-4">
                                         <div className="form-check form-switch">
@@ -93,27 +97,26 @@ const UserModal = ({user, setUser, callback}: props) => {
                             </div>
                             <div className="col-md-3">
                                 <label htmlFor="user-gender">Gender</label>
-                                <select name="" id="user-gender" className={'form-control'}
-                                        defaultValue={''}
+                                <Form.Select name="" id="user-gender" className={'form-control'}
+                                             value={user.gender ?? ''}
                                         onChange={(e: ChangeEvent<HTMLSelectElement>) => changeUserData('gender', e.target.value)}>
-                                    <option value="">Select a gender</option>
+                                    <option>Select a gender</option>
                                     {GENDER.map((gender: any) => {
-                                        return <option value={gender}
-                                                       selected={user.gender === gender}>{gender}</option>
+                                        return <option key={gender} value={gender}>{gender}</option>
                                     })}
-                                </select>
+                                </Form.Select>
                             </div>
                             <div className="col-md-3">
                                 <label htmlFor="user-role">Gender</label>
-                                <select name="" id="user-role" className={'form-control'}
-                                        defaultValue={''}
+                                <Form.Select name="" id="user-role" className={'form-control'}
+                                             value={user.roleId}
                                         onChange={(e: ChangeEvent<HTMLSelectElement>) => changeUserData('roleId', e.target.value)}>
-                                    <option value="">Select a gender</option>
+                                    <option>Select a gender</option>
                                     {Object.keys(ROLES_ID_BY_NAME).map((roleName: string) => {
                                         // @ts-ignore
-                                        return <option value={ROLES_ID_BY_NAME[roleName]} selected={ROLES_ID_BY_NAME[roleName] === user.roleId}>{roleName}</option>
+                                        return <option key={roleName} value={ROLES_ID_BY_NAME[roleName]}>{roleName}</option>
                                     })}
-                                </select>
+                                </Form.Select>
                             </div>
                         </div>
 
@@ -121,7 +124,7 @@ const UserModal = ({user, setUser, callback}: props) => {
                     </div>
                 </div>
             </div>
-        </Modal>
+        </SimpleModalDialog>
     );
 }
 

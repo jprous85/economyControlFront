@@ -18,7 +18,6 @@ const User = () => {
     return (
         <UserView
             loading={loading}
-            setLoading={setLoading}
             users={users}
             setUsers={setUsers}
             getAllUsers={getAllUsers}
