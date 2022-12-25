@@ -1,0 +1,7 @@
+{
+  "users" : {
+    "create" : {
+      "btnIncludeUser": "Incluir nuevo usuario"
+    }
+  }
+}

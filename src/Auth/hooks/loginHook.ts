@@ -14,6 +14,9 @@ interface props {
 }
 
 const LoginHook = async ({email, password, complex, setError}: props) => {
+
+    let user: any = null;
+
     await httpRequest('post', '/login', {
         email,
         password
@@ -21,8 +24,6 @@ const LoginHook = async ({email, password, complex, setError}: props) => {
         if (response.status === 200) {
 
             saveLocalStorageSimpleComplexData('accessToken', response.data.token.accessToken);
-
-            let user = null;
 
             await getUser(response.data.token.token.user_id).then(response => {
                 user = response;
@@ -35,14 +36,17 @@ const LoginHook = async ({email, password, complex, setError}: props) => {
                     userId: response.data.token.token.user_id,
                     user: user
                 });
-
                 complex.setAuth(response.data.token.accessToken);
+
             }
 
         } else {
             setError(response.response.data);
         }
+
     });
+
+    return user;
 
 }
 

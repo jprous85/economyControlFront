@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 import LoginHook from "../hooks/loginHook";
 import LoginView from "../views/login/loginView";
+import {ROLES, ROLES_NAME_BY_ID} from "../../Shared/Constants/RolesConstants";
 
 const Login = () => {
 
@@ -25,8 +26,13 @@ const Login = () => {
             complex,
             setError
         })
-            .then(() => {
-                return navigate('/users')
+            .then((response) => {
+                // @ts-ignore
+                if (ROLES_NAME_BY_ID[response.roleId] === ROLES.admin) {
+                    return navigate('/users')
+                } else {
+                    return navigate('/accounts')
+                }
             });
     }
 

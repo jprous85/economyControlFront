@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar";
+import NavbarComponent from "../../components/NavbarComponent";
 import {Container, Row} from "react-bootstrap";
 
 interface props {
@@ -9,7 +9,7 @@ const BaseLayout = ({children}: props) => {
 
     return (
         <Container fluid>
-            <Navbar />
+            <NavbarComponent />
             <Row>
                 {children}
             </Row>

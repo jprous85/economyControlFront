@@ -5,7 +5,7 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import Loading from "../../components/Loading";
 import UsersTable from "../components/UsersTable";
 import UserModal from "../components/UserModal";
-import {useRef, useState} from "react";
+import {useCallback, useState} from "react";
 import createUser from "../hooks/createUser";
 import getAllUsers from "../hooks/getAllUsers";
 import uuid from "react-uuid";
@@ -14,6 +14,7 @@ import ToastComponent from "../../components/ToastComponent";
 import 'bootstrap';
 import ConfirmModal from "../../components/ConfirmModal";
 import deleteUser from "../hooks/deleteUser";
+import {useTranslation} from "react-i18next";
 
 interface props {
     loading: boolean,
@@ -41,6 +42,8 @@ const INITIAL_USER = {
 }
 
 const UserView = ({loading, users, setUsers}: props) => {
+
+    const { t } = useTranslation();
 
     const [toast, setToast] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string>('');
@@ -93,15 +96,15 @@ const UserView = ({loading, users, setUsers}: props) => {
         assignUserFunction(() => createNewUser);
     }
 
-    const updateUserFunction = () => {
+    const updateUserFunction = useCallback(() => {
         setCreateOrUpdateShow(true);
         assignUserFunction(() => updateOldUser);
-    }
+    }, [createOrUpdateShow]);
 
-    const deleteUserFunction = () => {
+    const deleteUserFunction = useCallback(() => {
         setDeleteModalShowShow(true);
         assignUserFunction(() => deleteSelectedUser);
-    }
+    }, [deleteModalShow]);
 
     const assignUserFunction = (callback: Function) => {
         setUserFunction(callback);
@@ -119,7 +122,7 @@ const UserView = ({loading, users, setUsers}: props) => {
                         <button className={'btn btn-primary'}
                                 onClick={() => resetUserValues()}
                         >
-                            <FontAwesomeIcon icon={faPlus} /> {'Include new User'}
+                            <FontAwesomeIcon icon={faPlus} /> {t('users.create.btnIncludeUser')}
                         </button>
                     </div>
                     {loading && users.length === 0 && <Loading/>}

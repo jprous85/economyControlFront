@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import './index.css';
+import './lang/i18n';
 import reportWebVitals from './reportWebVitals';
 import RouterProvider from "./routes/routerProvider";
 

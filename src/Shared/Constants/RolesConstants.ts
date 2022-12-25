@@ -1,7 +1,7 @@
-export const ROLES = [
-    'admin',
-    'guest'
-]
+export const ROLES = {
+    admin: 'admin',
+    guest: 'guest'
+}
 
 export const ROLES_ID_BY_NAME = {
     "admin": 1,

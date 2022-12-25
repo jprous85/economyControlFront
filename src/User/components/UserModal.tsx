@@ -3,7 +3,7 @@ import {UserInterface} from "../interfaces/UserInterface";
 import {LANG} from "../../Shared/Constants/LangConstants";
 import {GENDER} from "../../Shared/Constants/GenderConstants";
 import {ROLES_ID_BY_NAME} from "../../Shared/Constants/RolesConstants";
-import {ChangeEvent} from "react";
+import React, {ChangeEvent} from "react";
 import { Form } from "react-bootstrap";
 
 interface props {
@@ -128,4 +128,4 @@ const UserModal = ({show, setShow, user, setUser, callback}: props) => {
     );
 }
 
-export default UserModal;
+export default React.memo(UserModal);
