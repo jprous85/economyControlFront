@@ -1,8 +1,14 @@
+import {Col, Row} from "react-bootstrap";
+
 const Loading = () => {
     return (
-        <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
+        <Row>
+            <Col className={'text-center mt-5'}>
+                <div className="spinner-border text-primary text-center" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </Col>
+        </Row>
     );
 }
 

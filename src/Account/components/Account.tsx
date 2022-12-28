@@ -1,10 +1,11 @@
 import BaseLayout from "../../Shared/layouts/baseLayout";
+import AccountView from "../views/AccountView";
 
 
 const Account = () => {
     return (
         <BaseLayout>
-            <div>Account</div>
+            <AccountView/>
         </BaseLayout>
     );
 }

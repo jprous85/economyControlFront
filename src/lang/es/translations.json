@@ -3,5 +3,10 @@
     "create" : {
       "btnIncludeUser": "Incluir nuevo usuario"
     }
+  },
+  "accounts" : {
+    "view": {
+      "newBtnAccount": "Crear nueva cuenta"
+    }
   }
 }
