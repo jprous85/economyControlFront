@@ -6,7 +6,10 @@
   },
   "accounts" : {
     "view": {
-      "newBtnAccount": "Crear nueva cuenta"
+      "newBtnAccount": "Crear nueva cuenta",
+      "editBtnAccount": "Editar",
+      "duplicateBtnAccount": "Duplicar",
+      "deleteBtnAccount": "Eliminar"
     }
   }
 }

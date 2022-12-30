@@ -1,6 +1,6 @@
 import {Button, Card, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import getOwnerAccounts from "../hooks/getOwnerAccounts";
 import getAllAccounts from "../hooks/getAllAccounts";
 import IsAdmin from "../../Shared/utils/isAdmin";
@@ -9,10 +9,17 @@ import Loading from "../../components/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
+import ConfirmModal from "../../components/ConfirmModal";
+import ToastComponent from "../../components/ToastComponent";
+import createAccount from "../hooks/createAccount";
+import updateAccount from "../hooks/updateAccount";
+import deleteAccount from "../hooks/deleteAccount";
+import AccountModal from "../components/AccountModal";
 
 const INITIAL_ACCOUNT = {
     "id": null,
     "name": "",
+    "description": "",
     "users": "",
     "ownersAccount": "",
     "active": 0,
@@ -27,16 +34,86 @@ const AccountView = () => {
     const complex = getLocalStorageComplexData();
 
     const [loading, setLoading] = useState(true);
+
+    const [toast, setToast] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string>('');
+
+    const [createOrUpdateShowModal, setCreateOrUpdateShowModal] = useState(false);
+    const [deleteShowModal, setDeleteShowModal] = useState(false);
+
     const [accounts, setAccounts] = useState<Array<AccountInterface>>([]);
+    const [account, setAccount] = useState<AccountInterface>(INITIAL_ACCOUNT);
+
+    const [customFunction, setCustomFunction] = useState<any>(() => {});
+
+
+    const createNewAccount = (account: AccountInterface) => {
+        createAccount(account).then((createResponse: any) => {
+            if (createResponse) {
+                setToastMessage(createResponse.data);
+                getAccountsRequest();
+                setToast(true);
+            }
+        })
+    }
+
+    const updateOldAccount = (account: AccountInterface) => {
+        updateAccount(account).then((updateResponse: any) => {
+            if (updateResponse) {
+                setToastMessage(updateResponse.data);
+                getAccountsRequest();
+                setToast(true);
+            }
+        });
+    }
+
+    const deleteSelectedAccount = (account: AccountInterface) => {
+        deleteAccount(account).then((deleteResponse: any) => {
+           if (deleteResponse) {
+               setToastMessage(deleteResponse.data);
+               getAccountsRequest();
+               setToast(true);
+           }
+        });
+    }
+
+    const resetAccountValues = () => {
+        setAccount(INITIAL_ACCOUNT);
+        setCreateOrUpdateShowModal(true);
+        assignFunction(() => createNewAccount)
+    }
+
+    const updateAccountFunction = useCallback((account: AccountInterface) => {
+        setAccount(account);
+        setCreateOrUpdateShowModal(true);
+        assignFunction(() => updateOldAccount);
+    }, [createOrUpdateShowModal]);
+
+    const deleteAccountFunction = useCallback((account: AccountInterface) => {
+        setAccount(account);
+        setDeleteShowModal(true);
+        assignFunction(() => deleteSelectedAccount);
+    }, [deleteShowModal])
+
+    const assignFunction = (callback: Function) => {
+        setCustomFunction(callback);
+    }
+
+    const dispatchFunction = () => {
+        customFunction(account);
+    };
 
     useEffect(() => {
+        getAccountsRequest();
+    }, []);
+
+    const getAccountsRequest = () => {
         if (IsAdmin()) {
             getAccounts();
         } else {
             getAccountsByUser();
         }
-        console.log(complex);
-    }, []);
+    }
 
     const getAccounts = () => {
         getAllAccounts().then((accountResponse: any) => {
@@ -56,7 +133,7 @@ const AccountView = () => {
         });
     }
 
-    const dropdownMenuOptions = () => {
+    const dropdownMenuOptions = (account: AccountInterface) => {
         return (
             <DropdownButton
                 align="end"
@@ -64,10 +141,10 @@ const AccountView = () => {
                 title={<FontAwesomeIcon icon={icon({name: "ellipsis-vertical"})} />}
                 id="dropdown-menu-align-end"
             >
-                <Dropdown.Item eventKey="1">{t('accounts.view.editBtnAccount')}</Dropdown.Item>
+                <Dropdown.Item eventKey="1" onClick={() => updateAccountFunction(account)}>{t('accounts.view.editBtnAccount')}</Dropdown.Item>
                 <Dropdown.Item eventKey="2">{t('accounts.view.duplicateBtnAccount')}</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item eventKey="4">{t('accounts.view.deleteBtnAccount')}</Dropdown.Item>
+                <Dropdown.Item eventKey="4" onClick={() => deleteAccountFunction(account)}>{t('accounts.view.deleteBtnAccount')}</Dropdown.Item>
             </DropdownButton>
        );
     }
@@ -76,7 +153,7 @@ const AccountView = () => {
         return (
             <Row>
                 <Col md={12} className={'text-end mt-4'}>
-                    <Button variant="primary">{t('accounts.view.newBtnAccount')}</Button>
+                    <Button variant="primary" onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
                 </Col>
                 <Col md={12} className={'mt-4'}>
                     <Container>
@@ -88,7 +165,7 @@ const AccountView = () => {
 
                                 let dropdownMenu = null;
                                 if (owners.includes(complex.userId)) {
-                                    dropdownMenu = dropdownMenuOptions();
+                                    dropdownMenu = dropdownMenuOptions(account);
                                 }
 
                                 return (
@@ -105,6 +182,20 @@ const AccountView = () => {
                         </Row>
                     </Container>
                 </Col>
+                <AccountModal
+                    account={account}
+                    setAccount={setAccount}
+                    callback={dispatchFunction}
+                    show={createOrUpdateShowModal}
+                    setShow={setCreateOrUpdateShowModal}
+                />
+                <ConfirmModal
+                    title={"Delete user"}
+                    message={`Are you sure to delete ${account.name}?`}
+                    callback={dispatchFunction}
+                    show={deleteShowModal}
+                    setShow={setDeleteShowModal}/>
+                <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
             </Row>
         );
     } else {

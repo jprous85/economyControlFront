@@ -48,8 +48,8 @@ const UserView = ({loading, users, setUsers}: props) => {
     const [toast, setToast] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string>('');
 
-    const [createOrUpdateShow, setCreateOrUpdateShow] = useState(false);
-    const [deleteModalShow, setDeleteModalShowShow] = useState(false);
+    const [createOrUpdateShowModal, setCreateOrUpdateShowModal] = useState(false);
+    const [deleteShowModal, setDeleteShowModal] = useState(false);
 
     const [user, setUser] = useState<UserInterface>(INITIAL_USER);
     const [userFunction, setUserFunction] = useState<any>(() => {});
@@ -92,19 +92,19 @@ const UserView = ({loading, users, setUsers}: props) => {
 
     const resetUserValues = () => {
         setUser(INITIAL_USER);
-        setCreateOrUpdateShow(true);
+        setCreateOrUpdateShowModal(true);
         assignUserFunction(() => createNewUser);
     }
 
     const updateUserFunction = useCallback(() => {
-        setCreateOrUpdateShow(true);
+        setCreateOrUpdateShowModal(true);
         assignUserFunction(() => updateOldUser);
-    }, [createOrUpdateShow]);
+    }, [createOrUpdateShowModal]);
 
     const deleteUserFunction = useCallback(() => {
-        setDeleteModalShowShow(true);
+        setDeleteShowModal(true);
         assignUserFunction(() => deleteSelectedUser);
-    }, [deleteModalShow]);
+    }, [deleteShowModal]);
 
     const assignUserFunction = (callback: Function) => {
         setUserFunction(callback);
@@ -140,14 +140,14 @@ const UserView = ({loading, users, setUsers}: props) => {
                 user={user}
                 setUser={setUser}
                 callback={dispatchFunction}
-                show={createOrUpdateShow}
-                setShow={setCreateOrUpdateShow}/>
+                show={createOrUpdateShowModal}
+                setShow={setCreateOrUpdateShowModal}/>
             <ConfirmModal
                 title={"Delete user"}
                 message={`Are you sure to delete ${user.name}?`}
                 callback={dispatchFunction}
-                show={deleteModalShow}
-                setShow={setDeleteModalShowShow}/>
+                show={deleteShowModal}
+                setShow={setDeleteShowModal}/>
             <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
         </BaseLayout>
     );
