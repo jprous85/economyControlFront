@@ -6,8 +6,8 @@ import getAllAccounts from "../hooks/getAllAccounts";
 import IsAdmin from "../../Shared/utils/isAdmin";
 import {AccountInterface} from "../interfaces/AccountInterface";
 import Loading from "../../components/Loading";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {icon} from '@fortawesome/fontawesome-svg-core/import.macro';
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
 import ConfirmModal from "../../components/ConfirmModal";
 import ToastComponent from "../../components/ToastComponent";
@@ -44,7 +44,8 @@ const AccountView = () => {
     const [accounts, setAccounts] = useState<Array<AccountInterface>>([]);
     const [account, setAccount] = useState<AccountInterface>(INITIAL_ACCOUNT);
 
-    const [customFunction, setCustomFunction] = useState<any>(() => {});
+    const [customFunction, setCustomFunction] = useState<any>(() => {
+    });
 
 
     const createNewAccount = (account: AccountInterface) => {
@@ -69,11 +70,11 @@ const AccountView = () => {
 
     const deleteSelectedAccount = (account: AccountInterface) => {
         deleteAccount(account).then((deleteResponse: any) => {
-           if (deleteResponse) {
-               setToastMessage(deleteResponse.data);
-               getAccountsRequest();
-               setToast(true);
-           }
+            if (deleteResponse) {
+                setToastMessage(deleteResponse.data);
+                getAccountsRequest();
+                setToast(true);
+            }
         });
     }
 
@@ -138,63 +139,64 @@ const AccountView = () => {
             <DropdownButton
                 align="end"
                 variant="secondary"
-                title={<FontAwesomeIcon icon={icon({name: "ellipsis-vertical"})} />}
+                title={<FontAwesomeIcon icon={icon({name: "ellipsis-vertical"})}/>}
                 id="dropdown-menu-align-end"
             >
-                <Dropdown.Item eventKey="1" onClick={() => updateAccountFunction(account)}>{t('accounts.view.editBtnAccount')}</Dropdown.Item>
+                <Dropdown.Item eventKey="1"
+                               onClick={() => updateAccountFunction(account)}>{t('accounts.view.editBtnAccount')}</Dropdown.Item>
                 <Dropdown.Item eventKey="2">{t('accounts.view.duplicateBtnAccount')}</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item eventKey="4" onClick={() => deleteAccountFunction(account)}>{t('accounts.view.deleteBtnAccount')}</Dropdown.Item>
+                <Dropdown.Divider/>
+                <Dropdown.Item eventKey="4"
+                               onClick={() => deleteAccountFunction(account)}>{t('accounts.view.deleteBtnAccount')}</Dropdown.Item>
             </DropdownButton>
-       );
+        );
     }
 
     if (!loading && accounts.length > 0) {
         return (
-            <Row>
+            <Row className={'ps-5 pe-4'}>
                 <Col md={12} className={'text-end mt-4'}>
-                    <Button variant="primary" onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
+                    <Button variant="primary"
+                            onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
                 </Col>
                 <Col md={12} className={'mt-4'}>
-                    <Container>
-                        <Row>
-                            {accounts.map((account: AccountInterface) => {
+                    <Row>
+                        {accounts.map((account: AccountInterface) => {
 
-                                const users = (JSON.parse(account.users));
-                                const owners = (JSON.parse(account.ownersAccount));
+                            const users = (JSON.parse(account.users));
+                            const owners = (JSON.parse(account.ownersAccount));
 
-                                let dropdownMenu = null;
-                                if (owners.includes(complex.userId)) {
-                                    dropdownMenu = dropdownMenuOptions(account);
-                                }
+                            let dropdownMenu = null;
+                            if (owners.includes(complex.userId)) {
+                                dropdownMenu = dropdownMenuOptions(account);
+                            }
 
-                                return (
-                                    <Col key={account.id} sm={3} className={'mb-3'}>
-                                        <Card className={'p-2'}>
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col md={12} className={'d-flex justify-content-between'}>
-                                                        <a href={`/economy/${account.id}`}>{account.name}</a>
-                                                        {dropdownMenu}
-                                                    </Col>
-                                                    <Col md={12} className={'mt-3'}>
-                                                        <Accordion>
-                                                            <Accordion.Item eventKey="0">
-                                                                <Accordion.Header>Description</Accordion.Header>
-                                                                <Accordion.Body>
-                                                                    {account.description ?? '---'}
-                                                                </Accordion.Body>
-                                                            </Accordion.Item>
-                                                        </Accordion>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                );
-                            })}
-                        </Row>
-                    </Container>
+                            return (
+                                <Col key={account.id} sm={3} className={'mb-3'}>
+                                    <Card className={'p-2'}>
+                                        <Card.Body>
+                                            <Row>
+                                                <Col md={12} className={'d-flex justify-content-between'}>
+                                                    <a href={`/economy/${account.id}`}>{account.name}</a>
+                                                    {dropdownMenu}
+                                                </Col>
+                                                <Col md={12} className={'mt-3'}>
+                                                    <Accordion>
+                                                        <Accordion.Item eventKey="0">
+                                                            <Accordion.Header>Description</Accordion.Header>
+                                                            <Accordion.Body>
+                                                                {account.description ?? '---'}
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
+                                                    </Accordion>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            );
+                        })}
+                    </Row>
                 </Col>
                 <AccountModal
                     account={account}
