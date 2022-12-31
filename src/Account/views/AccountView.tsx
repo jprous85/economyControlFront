@@ -202,6 +202,8 @@ const AccountView = () => {
                     callback={dispatchFunction}
                     show={createOrUpdateShowModal}
                     setShow={setCreateOrUpdateShowModal}
+                    setToast={setToast}
+                    setToastMessage={setToastMessage}
                 />
                 <ConfirmModal
                     title={"Delete user"}

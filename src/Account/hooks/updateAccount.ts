@@ -7,7 +7,7 @@ const updateAccount = async (account: AccountInterface) => {
     const complex = getLocalStorageComplexData();
 
     let tempRes = null;
-    await httpRequest('put', `/accounts/${account.id}/update`,account, complex.accessToken).then((response: any) => {
+    await httpRequest('put', `/accounts/${account.id}/update`, account, complex.accessToken).then((response: any) => {
         if (response.status === 200) {
             tempRes = response;
         } else {

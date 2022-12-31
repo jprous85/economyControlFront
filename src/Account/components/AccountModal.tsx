@@ -18,7 +18,9 @@ interface props {
     setShow: Function,
     account: AccountInterface;
     setAccount: Function;
-    callback: Function
+    callback: Function,
+    setToast: Function,
+    setToastMessage: Function
 }
 
 const INITIAL_USER = {
@@ -39,12 +41,9 @@ const INITIAL_USER = {
     updatedAt: null
 }
 
-const AccountModal = ({show, setShow, account, setAccount, callback}: props) => {
+const AccountModal = ({show, setShow, account, setAccount, callback, setToast, setToastMessage}: props) => {
 
     const complex = getLocalStorageComplexData();
-
-    const [toast, setToast] = useState<boolean>(false);
-    const [toastMessage, setToastMessage] = useState<string>('');
 
     const [deleteShowModal, setDeleteShowModal] = useState(false);
 
@@ -80,8 +79,6 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
             if (response) {
                 setToast(true);
                 setToastMessage(response.data);
-                setUsers([]);
-
                 account.users = deleteElement(account.users, user.id);
 
                 getAccountUsersRequest();
@@ -94,8 +91,6 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
             if (response) {
                 setToast(true);
                 setToastMessage(response.data);
-                //setUsers([]);
-
                 account.ownersAccount = includeElement(account.ownersAccount, user.id);
 
                 getAccountUsersRequest();
@@ -108,8 +103,6 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
             if (response) {
                 setToast(true);
                 setToastMessage(response.data);
-                //setUsers([]);
-
                 account.ownersAccount = deleteElement(account.ownersAccount, user.id);
 
                 getAccountUsersRequest();
@@ -127,7 +120,6 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
 
     const getAccountUsersRequest = () => {
         getAccountUsers().then(response => {
-            console.log(response);
             setUsers(response);
         });
     }
@@ -181,24 +173,36 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
                             </div>
                         </div>
 
-                        {users.length > 0 && <div className="row mt-3 m-1">
+                        <hr className={'mt-5 mb-5'}/>
+
+                        {users.length > 0 && <div className="row mt-3">
                             <div className="col-md-12">
                                 <h5>Owners</h5>
+                                <div className="row mb-3">
+                                    <div className="col-md-10">
+                                        <input type="text" className="form-control" placeholder={'invite an other user by email'}/>
+                                    </div>
+                                    <div className="col-md-2 d-grid gap-2">
+                                        <button className="btn btn-primary">Send</button>
+                                    </div>
+                                </div>
                                 {users.length > 0 && users.map((user: UserInterface) => {
                                     if (user.id !== complex.userId) {
                                         const isAdmin = isOwner(user.id);
                                         const styleButton = isAdmin ? 'btn-warning' : 'btn-secondary';
                                         return (
                                             <div key={user.id} className="row mt-2">
-                                                <div className="col-md-8 bg-light text-start pt-2">
-                                                    <strong>{user.email}</strong>
+                                                <div className="col-md-8 text-start pt-2">
+                                                    <span className={'m-2'}>
+                                                        <strong>{user.email}</strong>
+                                                    </span>
                                                 </div>
                                                 <div className="col-md-2">
                                                     <div className="d-grid gap-2">
                                                         <button className={'btn ' + styleButton} onClick={() => {
                                                             (isAdmin) ? deleteOwner(user) : includeOwner(user)
                                                         }}>
-                                                            {isAdmin ? "Es admin" : "No admin"}
+                                                            {isAdmin ? "Admin" : "No admin"}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -226,7 +230,6 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
                 callback={deleteUser}
                 show={deleteShowModal}
                 setShow={setDeleteShowModal}/>
-            <ToastComponent show={toast} setShow={setToast} title={'Account'} message={toastMessage}/>
         </SimpleModalDialog>
     );
 }

@@ -13,7 +13,7 @@ const createAccount = async (account: AccountInterface) => {
             description: account.description,
         },
         complex.accessToken).then((response: any) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
             tempRes = response;
         } else {
             console.log(response.response.data.message);
