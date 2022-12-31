@@ -1,9 +1,17 @@
 import SimpleModalDialog from "../../components/SimpleModalDialog";
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {AccountInterface} from "../interfaces/AccountInterface";
 import {UserInterface} from "../../User/interfaces/UserInterface";
 import getUser from "../../User/hooks/getUser";
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
+import deleteUserAccount from "../hooks/deleteUserAccount";
+import uuid from "react-uuid";
+import ConfirmModal from "../../components/ConfirmModal";
+import ToastComponent from "../../components/ToastComponent";
+import deleteElement from "../hooks/DeleteElementOfArray";
+import deleteOwnerAccount from "../hooks/deleteOwnerAccount";
+import includeOwnerAccount from "../hooks/includeOwnerAccount";
+import includeElement from "../hooks/IncludeElementOfArray";
 
 interface props {
     show: boolean,
@@ -13,11 +21,36 @@ interface props {
     callback: Function
 }
 
+const INITIAL_USER = {
+    id: null,
+    uuid: uuid(),
+    roleId: 0,
+    name: '',
+    firstSurname: null,
+    secondSurname: null,
+    email: '',
+    age: null,
+    gender: null,
+    lang: '',
+    lastLogin: '',
+    active: 0,
+    verified: 0,
+    createdAt: '',
+    updatedAt: null
+}
+
 const AccountModal = ({show, setShow, account, setAccount, callback}: props) => {
 
     const complex = getLocalStorageComplexData();
 
+    const [toast, setToast] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string>('');
+
+    const [deleteShowModal, setDeleteShowModal] = useState(false);
+
     const [users, setUsers] = useState<Array<UserInterface>>([]);
+    const [user, setUser] = useState<UserInterface>(INITIAL_USER);
+
 
     const changeAccountData = (key: string, value: any) => {
         setAccount({...account, [key]: value});
@@ -37,23 +70,73 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
         return usersTemp;
     }
 
+    const deleteUserFunction = (user: UserInterface) => {
+        setDeleteShowModal(true);
+        setUser(user);
+    }
+
+    const deleteUser = async () => {
+        await deleteUserAccount(account, user).then((response: any) => {
+            if (response) {
+                setToast(true);
+                setToastMessage(response.data);
+                setUsers([]);
+
+                account.users = deleteElement(account.users, user.id);
+
+                getAccountUsersRequest();
+            }
+        })
+    }
+
+    const includeOwner = async (user: UserInterface) => {
+        await includeOwnerAccount(account, user).then((response: any) => {
+            if (response) {
+                setToast(true);
+                setToastMessage(response.data);
+                //setUsers([]);
+
+                account.ownersAccount = includeElement(account.ownersAccount, user.id);
+
+                getAccountUsersRequest();
+            }
+        })
+    }
+
+    const deleteOwner = async (user: UserInterface) => {
+        await deleteOwnerAccount(account, user).then((response: any) => {
+            if (response) {
+                setToast(true);
+                setToastMessage(response.data);
+                //setUsers([]);
+
+                account.ownersAccount = deleteElement(account.ownersAccount, user.id);
+
+                getAccountUsersRequest();
+            }
+        })
+    }
+
     useEffect(() => {
         if (show) {
             if (account.users.length > 0) {
-                getAccountUsers().then(response => {
-                    setUsers(response);
-                });
+                getAccountUsersRequest();
             }
         } else setUsers([]);
     }, [show]);
+
+    const getAccountUsersRequest = () => {
+        getAccountUsers().then(response => {
+            console.log(response);
+            setUsers(response);
+        });
+    }
 
     const isOwner = (userId: number | null) => {
         if (!userId) return false;
 
         const arrayUsers = JSON.parse(account.ownersAccount);
-        const value = arrayUsers.includes(userId);
-        console.log(userId, value);
-        return value;
+        return arrayUsers.includes(userId);
     }
 
     return (
@@ -98,7 +181,7 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
                             </div>
                         </div>
 
-                        <div className="row mt-3 m-1">
+                        {users.length > 0 && <div className="row mt-3 m-1">
                             <div className="col-md-12">
                                 <h5>Owners</h5>
                                 {users.length > 0 && users.map((user: UserInterface) => {
@@ -112,14 +195,16 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
                                                 </div>
                                                 <div className="col-md-2">
                                                     <div className="d-grid gap-2">
-                                                        <button className={'btn ' + styleButton}>
+                                                        <button className={'btn ' + styleButton} onClick={() => {
+                                                            (isAdmin) ? deleteOwner(user) : includeOwner(user)
+                                                        }}>
                                                             {isAdmin ? "Es admin" : "No admin"}
                                                         </button>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-2">
                                                     <div className="d-grid gap-2">
-                                                        <a href="#" className={'btn btn-outline-danger'}>Eliminar</a>
+                                                        <a href="#" className={'btn btn-outline-danger'} onClick={() => deleteUserFunction(user)}>Eliminar</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -130,11 +215,18 @@ const AccountModal = ({show, setShow, account, setAccount, callback}: props) => 
                                 <div>No hay usuarios asignados</div>
                                 }
                             </div>
-                        </div>
+                        </div>}
 
                     </div>
                 </div>
             </div>
+            <ConfirmModal
+                title={"Delete user"}
+                message={`Are you sure to delete ${account.name}?`}
+                callback={deleteUser}
+                show={deleteShowModal}
+                setShow={setDeleteShowModal}/>
+            <ToastComponent show={toast} setShow={setToast} title={'Account'} message={toastMessage}/>
         </SimpleModalDialog>
     );
 }

@@ -1,4 +1,4 @@
-import {Button, Card, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
+import {Accordion, Button, Card, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useState} from "react";
 import getOwnerAccounts from "../hooks/getOwnerAccounts";
@@ -171,10 +171,24 @@ const AccountView = () => {
                                 return (
                                     <Col key={account.id} sm={3} className={'mb-3'}>
                                         <Card className={'p-2'}>
-                                            <Card.Title className={'d-flex justify-content-between'}>
-                                                <a href={`/economy/${account.id}`}>{account.name}</a>
-                                                {dropdownMenu}
-                                            </Card.Title>
+                                            <Card.Body>
+                                                <Row>
+                                                    <Col md={12} className={'d-flex justify-content-between'}>
+                                                        <a href={`/economy/${account.id}`}>{account.name}</a>
+                                                        {dropdownMenu}
+                                                    </Col>
+                                                    <Col md={12} className={'mt-3'}>
+                                                        <Accordion>
+                                                            <Accordion.Item eventKey="0">
+                                                                <Accordion.Header>Description</Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    {account.description ?? '---'}
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                        </Accordion>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
                                         </Card>
                                     </Col>
                                 );
