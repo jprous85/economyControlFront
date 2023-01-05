@@ -9,6 +9,7 @@ import User from "../User/components/User";
 import GuessRoutes from './guessRoutes';
 import Login from "../Auth/components/Login";
 import Account from "../Account/components/Account";
+import Economy from "../Economy/components/Economy";
 
 const Routers = () => {
 
@@ -21,6 +22,7 @@ const Routers = () => {
 
                         <Route element={<GuessRoutes/>}>
                             <Route path="accounts" element={<Account/>}/>
+                            <Route path="economy/:id" element={<Economy/>}/>
 
                             <Route element={<PrivateRoutes/>}>
                                 <Route path="users" element={<User/>}/>

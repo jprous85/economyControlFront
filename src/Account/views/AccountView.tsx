@@ -15,6 +15,7 @@ import createAccount from "../hooks/createAccount";
 import updateAccount from "../hooks/updateAccount";
 import deleteAccount from "../hooks/deleteAccount";
 import AccountModal from "../components/AccountModal";
+import AlertComponent from "../../components/Alert";
 
 const INITIAL_ACCOUNT = {
     "id": null,
@@ -34,6 +35,11 @@ const AccountView = () => {
     const complex = getLocalStorageComplexData();
 
     const [loading, setLoading] = useState(true);
+
+    const [alert, setAlert] = useState({
+        show: false,
+        message: ''
+    });
 
     const [toast, setToast] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string>('');
@@ -118,20 +124,25 @@ const AccountView = () => {
 
     const getAccounts = () => {
         getAllAccounts().then((accountResponse: any) => {
-            if (accountResponse) {
-                setAccounts(accountResponse.data);
-                setLoading(false);
-            }
+            assignAccounts(accountResponse);
         });
     }
 
     const getAccountsByUser = () => {
         getOwnerAccounts().then((accountResponse: any) => {
-            if (accountResponse) {
-                setAccounts(accountResponse.data);
-                setLoading(false);
-            }
+            assignAccounts(accountResponse);
         });
+    }
+
+    const assignAccounts = (accountResponse: any) => {
+        if (accountResponse) {
+            setAlert({
+                show: accountResponse.data.length === 0,
+                message: accountResponse.data.length === 0 ? 'No hay cuentas creadas' : ''
+            });
+            setAccounts(accountResponse.data);
+            setLoading(false);
+        }
     }
 
     const dropdownMenuOptions = (account: AccountInterface) => {
@@ -139,7 +150,7 @@ const AccountView = () => {
             <DropdownButton
                 align="end"
                 variant="secondary"
-                title={<FontAwesomeIcon icon={icon({name: "ellipsis-vertical"})}/>}
+                title={<FontAwesomeIcon icon={icon({name: "ellipsis"})}/>}
                 id="dropdown-menu-align-end"
             >
                 <Dropdown.Item eventKey="1"
@@ -152,7 +163,7 @@ const AccountView = () => {
         );
     }
 
-    if (!loading && accounts.length > 0) {
+    if (!loading) {
         return (
             <Row className={'ps-5 pe-4'}>
                 <Col md={12} className={'text-end mt-4'}>
@@ -160,6 +171,7 @@ const AccountView = () => {
                             onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
                 </Col>
                 <Col md={12} className={'mt-4'}>
+                    {alert.show && <AlertComponent style={'warning'} message={alert.message}/>}
                     <Row>
                         {accounts.map((account: AccountInterface) => {
 
