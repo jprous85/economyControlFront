@@ -1,5 +1,6 @@
 export interface AccountInterface {
     "id": number | null,
+    "uuid": string | null,
     "name": string,
     "description": string | null,
     "users": string,

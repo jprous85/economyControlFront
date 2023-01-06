@@ -22,7 +22,7 @@ const Routers = () => {
 
                         <Route element={<GuessRoutes/>}>
                             <Route path="accounts" element={<Account/>}/>
-                            <Route path="economy/:id" element={<Economy/>}/>
+                            <Route path="economy/:uuid" element={<Economy/>}/>
 
                             <Route element={<PrivateRoutes/>}>
                                 <Route path="users" element={<User/>}/>

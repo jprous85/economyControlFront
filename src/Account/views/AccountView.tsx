@@ -19,6 +19,7 @@ import AlertComponent from "../../components/Alert";
 
 const INITIAL_ACCOUNT = {
     "id": null,
+    "uuid": null,
     "name": "",
     "description": "",
     "users": "",
@@ -189,7 +190,7 @@ const AccountView = () => {
                                         <Card.Body>
                                             <Row>
                                                 <Col md={12} className={'d-flex justify-content-between'}>
-                                                    <a href={`/economy/${account.id}`}>{account.name}</a>
+                                                    <a href={`/economy/${account.uuid}`}>{account.name}</a>
                                                     {dropdownMenu}
                                                 </Col>
                                                 <Col md={12} className={'mt-3'}>
