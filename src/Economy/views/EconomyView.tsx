@@ -28,7 +28,6 @@ const ECONOMY_INITIAL = {
 const EconomyView = () => {
 
     const {uuid} = useParams();
-
     const {t} = useTranslation();
 
     const [loading, setLoading] = useState(true);
@@ -51,7 +50,7 @@ const EconomyView = () => {
                 console.log(response);
                 setAlert({
                     show: true,
-                    message: response.data.status === 404 ? 'No hay datos económicos' : ''
+                    message: response.data.status === 404 ? response.data.message : ''
                 });
                 setLoading(false);
             }
@@ -65,15 +64,44 @@ const EconomyView = () => {
 
     if (loading) {
         return <Loading/>
+    } else if (alert.show) {
+        return (
+            <div className="row">
+                <div className="col-md-12 mt-4">
+                    <AlertComponent style={'warning'} message={alert.message}/>
+                </div>
+            </div>
+        );
     } else {
         return (
             <div className={'col-md-12 mt-4'}>
-                <div className="col-md-12 text-end">
-                    <a href="#" className={'btn btn-primary'} onClick={() => {
-                    }}>{t('accounts.view.newBtnAccount')}</a>
-                </div>
-                <div className="col-md-12 mt-4">
-                    {alert.show && <AlertComponent style={'warning'} message={alert.message}/>}
+                <div className="card">
+                    <div className="card-body">
+                        <div className="col-md-12 text-end">
+                            <a href="#" className={'btn btn-primary'} onClick={() => {
+                            }}>{t('accounts.view.newBtnAccount')}</a>
+                        </div>
+                        <div className="col-md-12 pb-4">
+                            <label>Falta por pagar:</label>
+                            <div className="progress" role="progressbar" aria-label="Basic example" aria-valuenow={100}
+                                 aria-valuemin={0} aria-valuemax={100}>
+                                <div className={"progress-bar progress-bar-striped progress-bar-animated"}
+                                     style={{width: 100}}/>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="card">
+                                    incomes
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="card">
+                                    spends
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
