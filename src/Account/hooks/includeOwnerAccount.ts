@@ -9,7 +9,7 @@ const includeOwnerAccount = async (account: AccountInterface, user: UserInterfac
 
     let tempRes = null;
 
-    await httpRequest('put', `/accounts/${account.id}/includeOwner/${user.id}`,null, complex.accessToken).then((response: any) => {
+    await httpRequest('put', `/accounts/${account.uuid}/includeOwner/${user.id}`,null, complex.accessToken).then((response: any) => {
         if (response.status === 200) {
             tempRes = response;
         } else {

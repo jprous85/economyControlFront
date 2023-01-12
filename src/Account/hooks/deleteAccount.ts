@@ -8,7 +8,7 @@ const deleteAccount = async (account: AccountInterface) => {
 
     let tempRes = null;
 
-    await httpRequest('delete', `/accounts/${account.id}/delete`,null, complex.accessToken).then((response: any) => {
+    await httpRequest('delete', `/accounts/${account.uuid}/delete`,null, complex.accessToken).then((response: any) => {
         if (response.status === 200) {
             tempRes = response;
         } else {

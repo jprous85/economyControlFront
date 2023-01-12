@@ -9,7 +9,7 @@ const deleteOwnerAccount = async (account: AccountInterface, user: UserInterface
 
     let tempRes = null;
 
-    await httpRequest('put', `/accounts/${account.id}/deleteOwner/${user.id}`,null, complex.accessToken).then((response: any) => {
+    await httpRequest('put', `/accounts/${account.uuid}/deleteOwner/${user.id}`,null, complex.accessToken).then((response: any) => {
         if (response.status === 200) {
             tempRes = response;
         } else {

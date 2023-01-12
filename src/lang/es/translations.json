@@ -11,5 +11,10 @@
       "duplicateBtnAccount": "Duplicar",
       "deleteBtnAccount": "Eliminar"
     }
+  },
+  "economy" : {
+    "view": {
+      "newBtnEconomy": "Crear nuevo registro"
+    }
   }
 }
