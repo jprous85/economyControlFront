@@ -1,12 +1,18 @@
 import {useEffect, useState} from "react";
 import GetEconomy from "../hooks/getEconomy";
 import {useParams} from "react-router-dom";
-import {EconomyInterface, Totals} from "../interfaces/EconomyInterface";
+import {EconomyInterface, Incomes} from "../interfaces/EconomyInterface";
 import Loading from "../../components/Loading";
 import AlertComponent from "../../components/Alert";
 import {useTranslation} from "react-i18next";
 import {AccountInterface} from "../../Account/interfaces/AccountInterface";
 import GetAccountByUuid from "../../Account/hooks/getAccountByUuid";
+import ProgressBarComponent from "../../components/ProgressBar";
+import IncomesComponent from "../components/IncomesComponent";
+import ToastComponent from "../../components/ToastComponent";
+import ResultEconomyBox from "../components/ResultEconomyBox";
+import InformationEconomyBox from "../components/InformationEconomyBox";
+import BlockSeparator from "../components/BlockSeparator";
 
 const ACCOUNT_INITIAL = {
     "id": null,
@@ -31,7 +37,8 @@ const ECONOMY_INITIAL = {
         "totals": {
             "totalIncomes": 0,
             "totalPaid": 0,
-            "pendingToPay": 0
+            "pendingToPay": 0,
+            "totalExpenses": 0
         }
     },
     "active": 0,
@@ -39,14 +46,27 @@ const ECONOMY_INITIAL = {
     "updated_at": ''
 };
 
+const INCOME = {
+    "uuid": null,
+    "name": '',
+    "amount": 0,
+    "active": false
+}
+
 const EconomyView = () => {
 
     const {uuid} = useParams();
     const {t} = useTranslation('', {keyPrefix: 'economy.view'});
 
+    const [toast, setToast] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string>('');
+
     const [loading, setLoading] = useState(true);
     const [account, setAccount] = useState<AccountInterface>(ACCOUNT_INITIAL);
     const [economy, setEconomy] = useState<EconomyInterface>(ECONOMY_INITIAL);
+
+    const [income, setIncome] = useState<Incomes>(INCOME)
+
 
     const [alert, setAlert] = useState({
         show: false,
@@ -59,10 +79,8 @@ const EconomyView = () => {
     }, [])
 
     const getAccountFunction = () => {
-
         GetAccountByUuid(uuid).then((response: any) => {
             if (response.data.status === 404) {
-                console.log(response);
                 setAlert({
                     show: true,
                     message: response.data.status === 404 ? response.data.message : ''
@@ -70,7 +88,7 @@ const EconomyView = () => {
                 setLoading(false);
             }
             if (response.status === 200) {
-                setEconomy(response.data);
+                setAccount(response.data);
             }
         });
 
@@ -78,9 +96,7 @@ const EconomyView = () => {
 
     const getEconomyFunction = () => {
         GetEconomy(uuid).then((response: any) => {
-            console.log(response);
             if (response.data.status === 404) {
-                console.log(response);
                 setAlert({
                     show: true,
                     message: response.data.status === 404 ? response.data.message : ''
@@ -94,7 +110,6 @@ const EconomyView = () => {
         })
     }
 
-
     if (loading) {
         return <Loading/>
     } else if (alert.show) {
@@ -107,31 +122,44 @@ const EconomyView = () => {
         );
     } else {
         return (
-            <div className={'col-md-12 mt-4'}>
-                <div className="col-md-12 text-end">
-                    <a href="#" className={'btn btn-primary'} onClick={() => {
-                    }}>{t('newBtnEconomy')}</a>
-                </div>
+            <div className={'col-md-12 mt-4 ps-5 pe-5'}>
                 <div className="col-md-12 pb-4">
-                    <label>Falta por pagar:</label>
-                    <div className="progress" role="progressbar" aria-label="Basic example" aria-valuenow={100}
-                         aria-valuemin={0} aria-valuemax={100}>
-                        <div className={"progress-bar progress-bar-striped progress-bar-animated"}
-                             style={{width: 100}}/>
-                    </div>
+                    <ProgressBarComponent
+                        minimum={0}
+                        value={economy.economic_management?.totals.totalPaid}
+                        maximum={economy.economic_management?.totals.totalExpenses}
+                    />
                 </div>
                 <div className="row">
-                    <div className="col-md-6">
-                        <div className="card">
-                            incomes
-                        </div>
+                    <div className="col-md-8 mb-4">
+                        <InformationEconomyBox account={account} economy={economy}/>
                     </div>
-                    <div className="col-md-6">
-                        <div className="card">
-                            spends
-                        </div>
+                    <div className="col-md-4 mb-4">
+                        <ResultEconomyBox economy={economy}/>
                     </div>
+
+                    <BlockSeparator title={'Incomes'}/>
+
+                    <IncomesComponent
+                        getEconomyFunction={getEconomyFunction}
+                        economy={economy}
+                        setToast={setToast}
+                        setToastMessage={setToastMessage}
+                        income={income}
+                        setIncome={setIncome}
+                    />
+                    <BlockSeparator title={'Spent'} />
+
+                    <IncomesComponent
+                        getEconomyFunction={getEconomyFunction}
+                        economy={economy}
+                        setToast={setToast}
+                        setToastMessage={setToastMessage}
+                        income={income}
+                        setIncome={setIncome}
+                    />
                 </div>
+                <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
             </div>
         );
     }

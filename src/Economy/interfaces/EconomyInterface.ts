@@ -4,9 +4,9 @@ export interface EconomyInterface {
     "end_month": string,
     "account_id": number,
     "economic_management": {
-        "incomes": object,
-        "expenses": object,
-        "totals": object
+        "incomes": Incomes | object,
+        "expenses": Expenses | object,
+        "totals": Totals
     },
     "active": number,
     "created_at": string,
@@ -14,10 +14,10 @@ export interface EconomyInterface {
 }
 
 export interface Incomes {
-    "uuid": string,
+    "uuid": string | null,
     "name": string,
     "amount": number,
-    "active": number
+    "active": boolean
 }
 
 export interface Expenses {
@@ -31,5 +31,6 @@ export interface Expenses {
 export interface Totals {
     "totalIncomes": number,
     "totalPaid": number,
-    "pendingToPay": number
+    "pendingToPay": number,
+    "totalExpenses": number
 }
