@@ -117,12 +117,13 @@ const IncomesGroupComponent = (
     const showIncomes = () => {
         if (incomes) {
             return (
-                <table className="table table-striped table-hover">
+                <table className="table table-responsive">
                     <thead>
-                    <th className={'text-center'}>paid</th>
-                    <th>name</th>
-                    <th className={'text-end'}>amount</th>
-                    <th className={'text-end'}>actions</th>
+                    <tr>
+                        <th>name</th>
+                        <th className={'text-end'}>amount</th>
+                        <th className={'text-end'}>actions</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {
@@ -130,17 +131,7 @@ const IncomesGroupComponent = (
                             return (
                                 (
                                     <tr key={income.uuid}>
-                                        <td>
-                                            <div className="form-check form-switch ps-0">
-                                                <input className="form-check-input float-end success" type="checkbox"
-                                                       role="switch"
-                                                       id="account-active" checked={(income.active)}
-                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                           //changeIncomeData('active', (e.target.checked) ? 1 : 0)
-                                                       }}/>
-                                            </div>
-                                        </td>
-                                        <td>{income.name}</td>
+                                        <td><strong>{income.name}</strong></td>
                                         <th className={'text-end'}>{income.amount} €</th>
                                         <td className={'text-end'}>{menuActionOptions(income)}</td>
                                     </tr>
@@ -165,9 +156,9 @@ const IncomesGroupComponent = (
                         <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
                     </a>
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-3">
                     <a href="#"
-                       className="btn btn-outline-danger text-start"
+                       className="btn btn-outline-danger text-end"
                        onClick={() => deleteSelectedIncome(income)}
                     >
                         <FontAwesomeIcon icon={icon({name: 'trash', style: 'solid'})}/>
@@ -178,37 +169,35 @@ const IncomesGroupComponent = (
     }
 
     return (
-        <div className="col-md-6">
-            <div className="card border-primary">
-                <div className="card-body">
-                    <div>
-                        <div className={'mt-3'}>
-                            {
-                                showIncomes()
-                            }
-                        </div>
+        <div className="card border-primary">
+            <div className="card-body">
+                <div>
+                    <div className={'mt-3'}>
+                        {
+                            showIncomes()
+                        }
                     </div>
-                    <div>
-                        <div className="d-grid gap-2">
-                            <a href="#" className={'btn btn-outline-primary'}
-                               onClick={() => createEmptyIncome()}>
-                                <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso</a>
-                        </div>
-                    </div>
-                    <IncomeModalComponent
-                        showIncome={showIncomeModal}
-                        setShowIncome={setShowIncomeModal}
-                        income={income}
-                        setIncome={setIncome}
-                        callback={dispatchFunction}
-                    />
-                    <ConfirmModal
-                        title={"Delete user"}
-                        message={`Are you sure to delete ${income.name}?`}
-                        callback={dispatchFunction}
-                        show={deleteShowModal}
-                        setShow={setDeleteShowModal}/>
                 </div>
+                <div>
+                    <div className="d-grid gap-2">
+                        <a href="#" className={'btn btn-outline-primary'}
+                           onClick={() => createEmptyIncome()}>
+                            <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso</a>
+                    </div>
+                </div>
+                <IncomeModalComponent
+                    showIncome={showIncomeModal}
+                    setShowIncome={setShowIncomeModal}
+                    income={income}
+                    setIncome={setIncome}
+                    callback={dispatchFunction}
+                />
+                <ConfirmModal
+                    title={"Delete user"}
+                    message={`Are you sure to delete ${income.name}?`}
+                    callback={dispatchFunction}
+                    show={deleteShowModal}
+                    setShow={setDeleteShowModal}/>
             </div>
         </div>
     );

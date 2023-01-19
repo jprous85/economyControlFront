@@ -21,11 +21,11 @@ export interface Incomes {
 }
 
 export interface Expenses {
-    "uuid": string,
+    "uuid": string | null,
     "name": string,
     "amount": number,
     "paid": boolean,
-    "active": number
+    "active": boolean
 }
 
 export interface Totals {

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import GetEconomy from "../hooks/getEconomy";
 import {useParams} from "react-router-dom";
-import {EconomyInterface, Incomes} from "../interfaces/EconomyInterface";
+import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
 import Loading from "../../components/Loading";
 import AlertComponent from "../../components/Alert";
 import {useTranslation} from "react-i18next";
@@ -13,6 +13,7 @@ import ToastComponent from "../../components/ToastComponent";
 import ResultEconomyBox from "../components/ResultEconomyBox";
 import InformationEconomyBox from "../components/InformationEconomyBox";
 import BlockSeparator from "../components/BlockSeparator";
+import SpentGroupComponent from "../components/SpentComponent";
 
 const ACCOUNT_INITIAL = {
     "id": null,
@@ -53,6 +54,14 @@ const INCOME = {
     "active": false
 }
 
+const SPENT = {
+    "uuid": null,
+    "name": '',
+    "amount": 0,
+    "paid": false,
+    "active": false
+}
+
 const EconomyView = () => {
 
     const {uuid} = useParams();
@@ -66,6 +75,7 @@ const EconomyView = () => {
     const [economy, setEconomy] = useState<EconomyInterface>(ECONOMY_INITIAL);
 
     const [income, setIncome] = useState<Incomes>(INCOME)
+    const [spent, setSpent] = useState<Expenses>(SPENT)
 
 
     const [alert, setAlert] = useState({
@@ -123,13 +133,6 @@ const EconomyView = () => {
     } else {
         return (
             <div className={'col-md-12 mt-4 ps-5 pe-5'}>
-                <div className="col-md-12 pb-4">
-                    <ProgressBarComponent
-                        minimum={0}
-                        value={economy.economic_management?.totals.totalPaid}
-                        maximum={economy.economic_management?.totals.totalExpenses}
-                    />
-                </div>
                 <div className="row">
                     <div className="col-md-8 mb-4">
                         <InformationEconomyBox account={account} economy={economy}/>
@@ -138,26 +141,30 @@ const EconomyView = () => {
                         <ResultEconomyBox economy={economy}/>
                     </div>
 
-                    <BlockSeparator title={'Incomes'}/>
-
-                    <IncomesComponent
-                        getEconomyFunction={getEconomyFunction}
-                        economy={economy}
-                        setToast={setToast}
-                        setToastMessage={setToastMessage}
-                        income={income}
-                        setIncome={setIncome}
-                    />
-                    <BlockSeparator title={'Spent'} />
-
-                    <IncomesComponent
-                        getEconomyFunction={getEconomyFunction}
-                        economy={economy}
-                        setToast={setToast}
-                        setToastMessage={setToastMessage}
-                        income={income}
-                        setIncome={setIncome}
-                    />
+                    <div className="row">
+                        <div className="col-md-6">
+                            <BlockSeparator title={'Incomes'}/>
+                            <IncomesComponent
+                                getEconomyFunction={getEconomyFunction}
+                                economy={economy}
+                                setToast={setToast}
+                                setToastMessage={setToastMessage}
+                                income={income}
+                                setIncome={setIncome}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <BlockSeparator title={'Spent'} />
+                            <SpentGroupComponent
+                                getEconomyFunction={getEconomyFunction}
+                                economy={economy}
+                                setToast={setToast}
+                                setToastMessage={setToastMessage}
+                                spent={spent}
+                                setSpent={setSpent}
+                            />
+                        </div>
+                    </div>
                 </div>
                 <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
             </div>
