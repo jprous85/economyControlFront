@@ -51,7 +51,8 @@ const INCOME = {
     "uuid": null,
     "name": '',
     "amount": 0,
-    "active": false
+    "fixed": false,
+    "active": true
 }
 
 const SPENT = {
@@ -59,7 +60,8 @@ const SPENT = {
     "name": '',
     "amount": 0,
     "paid": false,
-    "active": false
+    "fixed": false,
+    "active": true
 }
 
 const EconomyView = () => {

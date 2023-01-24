@@ -1,6 +1,6 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
-import {EconomyInterface, Incomes} from "../interfaces/EconomyInterface";
+import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
 import {Dropdown, DropdownButton} from "react-bootstrap";
 import createIncome from "../hooks/createIncome";
 import React, {ChangeEvent, useState} from "react";
@@ -9,12 +9,14 @@ import uuid from "react-uuid";
 import deleteIncome from "../hooks/deleteIncome";
 import ConfirmModal from "../../components/ConfirmModal";
 import updateIncome from "../hooks/updateIncome";
+import updateFixedStatus from "../hooks/updateFixedStatus";
 
 const INCOME = {
-    "uuid": uuid(),
+    "uuid": '',
     "name": '',
     "amount": 0,
-    "active": 0
+    "fixed": false,
+    "active": true
 }
 
 interface props {
@@ -72,6 +74,22 @@ const IncomesGroupComponent = (
         })
     }
 
+    const updateFixedStatusFunction = (economy: EconomyInterface, income: Incomes, field: string) => {
+        updateFixedStatus(economy, income, field).then((updateResponse: any) => {
+            if (updateResponse) {
+                setToast(true);
+                setToastMessage(updateResponse.data);
+
+                incomes.map((incomeCore: Incomes, index: number) => {
+                    if (incomeCore.uuid === income.uuid) {
+                        incomes[index] = income;
+                    }
+                });
+                getEconomyFunction();
+            }
+        })
+    }
+
     const deleteIncomeFunction = (economy: EconomyInterface, income: Incomes) => {
         deleteIncome(economy, income).then((createResponse: any) => {
             if (createResponse) {
@@ -86,8 +104,13 @@ const IncomesGroupComponent = (
         })
     }
 
+    const changeFixedData = (income: Incomes, key: string, value: any) => {
+        income.fixed = value;
+        updateFixedStatusCallback(income);
+    }
 
     const createEmptyIncome = () => {
+        INCOME.uuid = uuid();
         setIncome(INCOME);
         setShowIncomeModal(true);
         assignFunction(() => createNewIncome)
@@ -97,6 +120,11 @@ const IncomesGroupComponent = (
         setIncome(income);
         setShowIncomeModal(true);
         assignFunction(() => updateIncomeFunction);
+    }
+
+    const updateFixedStatusCallback = (income: Incomes) => {
+        setIncome(income);
+        updateFixedStatusFunction(economy, income, 'incomes');
     }
 
     const deleteSelectedIncome = (income: Incomes) => {
@@ -122,6 +150,7 @@ const IncomesGroupComponent = (
                     <tr>
                         <th>name</th>
                         <th className={'text-end'}>amount</th>
+                        <th className={'text-end'}>fixed</th>
                         <th className={'text-end'}>actions</th>
                     </tr>
                     </thead>
@@ -132,7 +161,17 @@ const IncomesGroupComponent = (
                                 (
                                     <tr key={income.uuid}>
                                         <td><strong>{income.name}</strong></td>
-                                        <th className={'text-end'}>{income.amount} €</th>
+                                        <td className={'text-end'}>{income.amount} €</td>
+                                        <td className={'text-end'}>
+                                            <div className="form-check form-switch">
+                                                <input className="form-check-input float-end success" type="checkbox"
+                                                       role="switch"
+                                                       id="account-table-paid" checked={(income.fixed)}
+                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                           changeFixedData(income, 'fixed', (e.target.checked) ? 1 : 0);
+                                                       }}/>
+                                            </div>
+                                        </td>
                                         <td className={'text-end'}>{menuActionOptions(income)}</td>
                                     </tr>
                                 )

@@ -9,13 +9,15 @@ import updateSpent from "../hooks/updateSpent";
 import deleteSpent from "../hooks/deleteSpent";
 import SpentModalComponent from "./SpentModal";
 import updatePaidStatusSpent from "../hooks/updatePaidStatusSpent";
+import updateFixedStatus from "../hooks/updateFixedStatus";
 
 const SPENT = {
     "uuid": uuid(),
     "name": '',
     "amount": 0,
     "paid": false,
-    "active": false
+    "fixed": false,
+    "active": true
 }
 
 interface props {
@@ -89,6 +91,22 @@ const SpentGroupComponent = (
         })
     }
 
+    const updateFixedStatusFunction = (economy: EconomyInterface, spent: Expenses, field: string) => {
+        updateFixedStatus(economy, spent, field).then((updateResponse: any) => {
+            if (updateResponse) {
+                setToast(true);
+                setToastMessage(updateResponse.data);
+
+                expenses.map((spentCore: Expenses, index: number) => {
+                    if (spentCore.uuid === spent.uuid) {
+                        expenses[index] = spent;
+                    }
+                });
+                getEconomyFunction();
+            }
+        })
+    }
+
 
     const deleteSpentFunction = (economy: EconomyInterface, spent: Expenses) => {
         deleteSpent(economy, spent).then((createResponse: any) => {
@@ -109,6 +127,11 @@ const SpentGroupComponent = (
         updatePaidStatusSpentCallback(spent);
     }
 
+    const changeFixedData = (spent: Expenses, key: string, value: any) => {
+        spent.fixed = value;
+        updateFixedStatusCallback(spent);
+    }
+
     const createEmptySpent = () => {
         setSpent(SPENT);
         setShowSpentModal(true);
@@ -124,6 +147,11 @@ const SpentGroupComponent = (
     const updatePaidStatusSpentCallback = (spent: Expenses) => {
         setSpent(spent);
         updatePaidStatusSpentFunction(economy, spent);
+    }
+
+    const updateFixedStatusCallback = (spent: Expenses) => {
+        setSpent(spent);
+        updateFixedStatusFunction(economy, spent, 'expenses');
     }
 
     const deleteSelectedSpent = (spent: Expenses) => {
@@ -149,6 +177,7 @@ const SpentGroupComponent = (
                     <tr>
                         <th>name</th>
                         <th className={'text-end'}>amount</th>
+                        <th className={'text-end'}>fixed</th>
                         <th className={'text-end'}>paid</th>
                         <th className={'text-end'}>actions</th>
                     </tr>
@@ -166,6 +195,16 @@ const SpentGroupComponent = (
                                     <tr key={internSpent.uuid}>
                                         <td>{nameFormatted}</td>
                                         <th className={'text-end'}>{internSpent.amount} €</th>
+                                        <td>
+                                            <div className="form-check form-switch">
+                                                <input className="form-check-input float-end success" type="checkbox"
+                                                       role="switch"
+                                                       id="account-table-paid" checked={(internSpent.fixed)}
+                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                           changeFixedData(internSpent, 'fixed', (e.target.checked) ? 1 : 0);
+                                                       }}/>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div className="form-check form-switch">
                                                 <input className="form-check-input float-end success" type="checkbox"
