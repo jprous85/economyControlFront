@@ -46,7 +46,8 @@ export const httpRequest = async(type: string, url: string, body: object | null,
                 break;
         }
     } catch (err: any) {
-        if (err.response.data.message === "Unauthorized") {
+        console.log(err.code);
+        if (err.response?.data.message === "Unauthorized" || err.code === 'ERR_NETWORK') {
             saveLocalStorage('complexData', '');
             document.location = '/login';
         }

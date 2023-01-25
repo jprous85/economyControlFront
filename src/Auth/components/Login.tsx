@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 
 import {AuthContext} from "../contexts/authContext";
 import {useNavigate} from "react-router-dom";
@@ -6,8 +6,11 @@ import {useNavigate} from "react-router-dom";
 import LoginHook from "../hooks/loginHook";
 import LoginView from "../views/login/loginView";
 import {ROLES, ROLES_NAME_BY_ID} from "../../Shared/Constants/RolesConstants";
+import axios from "axios";
+import env from "react-dotenv";
 
 const Login = () => {
+const BASE_URL = env.URL_API;
 
     const complex = useContext(AuthContext);
     const navigate = useNavigate();
@@ -18,6 +21,26 @@ const Login = () => {
     });
 
     const [error, setError] = useState('');
+
+
+    useEffect(() => {
+        healthCheck();
+    }, [])
+
+    const healthCheck = () => {
+        axios.get(`${BASE_URL}/health-check`)
+            .then((response: any) => {
+                console.log(response);
+                if (response.response.status === 404) {
+                    setError('No API connection found');
+                }
+            })
+            .catch((response: any) => {
+                if (response.code === 'ERR_NETWORK') {
+                    setError('No API connection found');
+                }
+            })
+    }
 
     const submitLogin = () => {
         LoginHook({
