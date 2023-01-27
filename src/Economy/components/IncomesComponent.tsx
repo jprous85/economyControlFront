@@ -3,13 +3,14 @@ import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
 import {Dropdown, DropdownButton} from "react-bootstrap";
 import createIncome from "../hooks/createIncome";
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useRef, useState} from "react";
 import IncomeModalComponent from "./IncomeModal";
 import uuid from "react-uuid";
 import deleteIncome from "../hooks/deleteIncome";
 import ConfirmModal from "../../components/ConfirmModal";
 import updateIncome from "../hooks/updateIncome";
 import updateFixedStatus from "../hooks/updateFixedStatus";
+import TooltipOverlay from "../../components/TooltipOverlay";
 
 const INCOME = {
     "uuid": '',
@@ -37,6 +38,8 @@ const IncomesGroupComponent = (
         income,
         setIncome,
     }: props) => {
+
+    const itemEls = useRef<Array<HTMLElement>>([]);
 
     const [showIncomeModal, setShowIncomeModal] = useState(false);
 
@@ -142,7 +145,44 @@ const IncomesGroupComponent = (
         setCustomFunction(callback);
     }
 
+
     const showIncomes = () => {
+        if (incomes.length === 0) return null;
+
+        return (
+            Array.from(incomes).map((income: any, index: number) => {
+
+                const colorPin = (income.fixed) ? 'black' : 'lightgray';
+
+                return (
+                    <div className={'row mb-2'} key={index}>
+                        <div className="col-xs-12 col-sm-2 text-md-center text-sm-start">
+                            <TooltipOverlay
+                                key={index}
+                                tooltipText={'Income fixed'}
+                                placement={'bottom'}>
+                                <span>
+                                    <FontAwesomeIcon style={{color: colorPin}}
+                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
+                                                     onClick={(e: any) => {
+                                                         changeFixedData(income, 'fixed', !income.fixed);
+                                                     }}
+                                    />
+                                </span>
+                            </TooltipOverlay>
+                            {(income.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
+                        </div>
+                        <div className="col-6"><strong>{income.name}</strong></div>
+                        <div className="col-6 col-sm-2 text-end"><strong>{income.amount} €</strong></div>
+                        <div className="col-md-2 col-sm-12 mt-3 mb-2">{menuActionOptions(income)}</div>
+                        <hr className={'mt-3'}/>
+                    </div>
+                )
+            })
+        );
+    }
+
+    /*const showIncomes = () => {
         if (incomes) {
             return (
                 <table className="table table-responsive">
@@ -182,12 +222,12 @@ const IncomesGroupComponent = (
                 </table>
             )
         }
-    }
+    }*/
 
     const menuActionOptions = (income: Incomes) => {
         return (
-            <div className={'row justify-content-end'}>
-                <div className="col-md-2">
+            <div className={'row'}>
+                <div className="col-6 text-center">
                     <a href="#"
                        className="btn btn-warning text-end"
                        onClick={() => updateOldIncome(income)}
@@ -195,7 +235,7 @@ const IncomesGroupComponent = (
                         <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
                     </a>
                 </div>
-                <div className="col-md-3">
+                <div className="col-6 text-center">
                     <a href="#"
                        className="btn btn-outline-danger text-end"
                        onClick={() => deleteSelectedIncome(income)}
