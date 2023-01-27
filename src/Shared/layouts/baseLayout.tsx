@@ -10,7 +10,7 @@ const BaseLayout = ({children}: props) => {
     return (
         <Container fluid>
             <NavbarComponent />
-            <Row>
+            <Row className={'mb-5'}>
                 {children}
             </Row>
         </Container>

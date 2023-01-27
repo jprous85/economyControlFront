@@ -10,6 +10,7 @@ import deleteSpent from "../hooks/deleteSpent";
 import SpentModalComponent from "./SpentModal";
 import updatePaidStatusSpent from "../hooks/updatePaidStatusSpent";
 import updateFixedStatus from "../hooks/updateFixedStatus";
+import TooltipOverlay from "../../components/TooltipOverlay";
 
 const SPENT = {
     "uuid": uuid(),
@@ -170,67 +171,60 @@ const SpentGroupComponent = (
     }
 
     const showExpenses = () => {
-        if (expenses) {
-            return (
-                <table className="table table-responsive">
-                    <thead>
-                    <tr>
-                        <th>name</th>
-                        <th className={'text-end'}>amount</th>
-                        <th className={'text-end'}>fixed</th>
-                        <th className={'text-end'}>paid</th>
-                        <th className={'text-end'}>actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        Array.from(expenses).map((internSpent: any) => {
 
-                            const nameFormatted = (internSpent.paid) ?
-                                <del className={'text-muted'}>{internSpent.name}</del> :
-                                <span><strong>{internSpent.name}</strong></span>;
+        if (expenses.length === 0) return null;
 
-                            return (
-                                (
-                                    <tr key={internSpent.uuid}>
-                                        <td>{nameFormatted}</td>
-                                        <th className={'text-end'}>{internSpent.amount} €</th>
-                                        <td>
-                                            <div className="form-check form-switch">
-                                                <input className="form-check-input float-end success" type="checkbox"
-                                                       role="switch"
-                                                       id="account-table-paid" checked={(internSpent.fixed)}
-                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                           changeFixedData(internSpent, 'fixed', (e.target.checked) ? 1 : 0);
-                                                       }}/>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="form-check form-switch">
-                                                <input className="form-check-input float-end success" type="checkbox"
-                                                       role="switch"
-                                                       id="account-table-paid" checked={(internSpent.paid)}
-                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                           changeSpentData(internSpent, 'paid', (e.target.checked) ? 1 : 0);
-                                                       }}/>
-                                            </div>
-                                        </td>
-                                        <td className={'text-end'}>{menuActionOptions(internSpent)}</td>
-                                    </tr>
-                                )
-                            );
-                        })
-                    }
-                    </tbody>
-                </table>
-            )
-        }
+        return (
+            Array.from(expenses).map((internSpent: any, index: number) => {
+
+                const nameFormatted = (internSpent.paid) ?
+                    <del className={'text-muted'}>{internSpent.name}</del> :
+                    <span><strong>{internSpent.name}</strong></span>;
+
+                const colorPin = (internSpent.fixed) ? 'black' : 'lightgray';
+
+                return (
+                    <div className={'row mb-2'} key={index}>
+                        <div className="col-9 col-sm-1 text-md-center text-sm-start">
+                            <TooltipOverlay
+                                key={index}
+                                tooltipText={'Income fixed'}
+                                placement={'bottom'}>
+                                <span>
+                                    <FontAwesomeIcon style={{color: colorPin}}
+                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
+                                                     onClick={(e: any) => {
+                                                         changeFixedData(internSpent, 'fixed', !internSpent.fixed);
+                                                     }}
+                                    />
+                                </span>
+                            </TooltipOverlay>
+                            {(internSpent.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this spent is fixed'}</small></span>}
+                        </div>
+                        <div className="col-3 col-sm-1">
+                            <div className="form-check form-switch">
+                                <input className="form-check-input float-end success" type="checkbox"
+                                       role="switch"
+                                       id="account-table-paid" checked={(internSpent.paid)}
+                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                           changeSpentData(internSpent, 'paid', (e.target.checked) ? 1 : 0);
+                                       }}/>
+                            </div>
+                        </div>
+                        <div className="col-6 col-sm-5">{nameFormatted}</div>
+                        <div className="col-6 col-sm-2 text-end"><strong>{internSpent.amount} €</strong></div>
+                        <div className="col-12 col-sm-2">{menuActionOptions(internSpent)}</div>
+                        <hr className={'mt-3'}/>
+                    </div>
+                )
+            })
+        );
     }
 
     const menuActionOptions = (internSpent: Expenses) => {
         return (
-            <div className={'row justify-content-end'}>
-                <div className="col-md-3">
+            <div className={'row'}>
+                <div className="col-6 text-center">
                     <a href="#"
                        className="btn btn-warning text-end"
                        onClick={() => updateOldSpent(internSpent)}
@@ -238,7 +232,7 @@ const SpentGroupComponent = (
                         <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
                     </a>
                 </div>
-                <div className="col-md-3">
+                <div className="col-6 text-center">
                     <a href="#"
                        className="btn btn-outline-danger text-end"
                        onClick={() => deleteSelectedSpent(internSpent)}

@@ -156,7 +156,7 @@ const IncomesGroupComponent = (
 
                 return (
                     <div className={'row mb-2'} key={index}>
-                        <div className="col-xs-12 col-sm-2 text-md-center text-sm-start">
+                        <div className="col-12 col-sm-1 text-md-center text-sm-start">
                             <TooltipOverlay
                                 key={index}
                                 tooltipText={'Income fixed'}
@@ -172,57 +172,15 @@ const IncomesGroupComponent = (
                             </TooltipOverlay>
                             {(income.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
                         </div>
-                        <div className="col-6"><strong>{income.name}</strong></div>
+                        <div className="col-7"><strong>{income.name}</strong></div>
                         <div className="col-6 col-sm-2 text-end"><strong>{income.amount} €</strong></div>
-                        <div className="col-md-2 col-sm-12 mt-3 mb-2">{menuActionOptions(income)}</div>
+                        <div className="col-md-2 col-sm-12">{menuActionOptions(income)}</div>
                         <hr className={'mt-3'}/>
                     </div>
                 )
             })
         );
     }
-
-    /*const showIncomes = () => {
-        if (incomes) {
-            return (
-                <table className="table table-responsive">
-                    <thead>
-                    <tr>
-                        <th>name</th>
-                        <th className={'text-end'}>amount</th>
-                        <th className={'text-end'}>fixed</th>
-                        <th className={'text-end'}>actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        Array.from(incomes).map((income: any) => {
-                            return (
-                                (
-                                    <tr key={income.uuid}>
-                                        <td><strong>{income.name}</strong></td>
-                                        <td className={'text-end'}>{income.amount} €</td>
-                                        <td className={'text-end'}>
-                                            <div className="form-check form-switch">
-                                                <input className="form-check-input float-end success" type="checkbox"
-                                                       role="switch"
-                                                       id="account-table-paid" checked={(income.fixed)}
-                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                           changeFixedData(income, 'fixed', (e.target.checked) ? 1 : 0);
-                                                       }}/>
-                                            </div>
-                                        </td>
-                                        <td className={'text-end'}>{menuActionOptions(income)}</td>
-                                    </tr>
-                                )
-                            );
-                        })
-                    }
-                    </tbody>
-                </table>
-            )
-        }
-    }*/
 
     const menuActionOptions = (income: Incomes) => {
         return (
