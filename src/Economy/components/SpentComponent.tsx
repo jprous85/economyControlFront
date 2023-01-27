@@ -188,7 +188,7 @@ const SpentGroupComponent = (
                         <div className="col-9 col-sm-1 text-md-center text-sm-start">
                             <TooltipOverlay
                                 key={index}
-                                tooltipText={'Income fixed'}
+                                tooltipText={'Spent fixed'}
                                 placement={'bottom'}>
                                 <span>
                                     <FontAwesomeIcon style={{color: colorPin}}
