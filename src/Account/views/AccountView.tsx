@@ -24,7 +24,7 @@ const INITIAL_ACCOUNT = {
     "description": "",
     "users": "",
     "ownersAccount": "",
-    "active": 0,
+    "active": 1,
     "created_at": "",
     "updated_at": ""
 }
@@ -150,7 +150,7 @@ const AccountView = () => {
         return (
             <DropdownButton
                 align="end"
-                variant="secondary"
+                variant="none"
                 title={<FontAwesomeIcon icon={icon({name: "ellipsis"})}/>}
                 id="dropdown-menu-align-end"
             >
@@ -190,7 +190,7 @@ const AccountView = () => {
                                         <Card.Body>
                                             <Row>
                                                 <Col md={12} className={'d-flex justify-content-between'}>
-                                                    <a href={`/economy/${account.uuid}`}>{account.name}</a>
+                                                    <a href={`/economy/${account.uuid}`}><strong>{account.name}</strong></a>
                                                     {dropdownMenu}
                                                 </Col>
                                                 <Col md={12} className={'mt-3'}>
