@@ -14,27 +14,25 @@ import Economy from "../Economy/components/Economy";
 const Routers = () => {
 
     return (
-        <ThemeProvider>
-            <AuthProvider>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="login" element={<Login/>}/>
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="login" element={<Login/>}/>
 
-                        <Route element={<GuessRoutes/>}>
-                            <Route path="accounts" element={<Account/>}/>
-                            <Route path="economy/:uuid" element={<Economy/>}/>
+                    <Route element={<GuessRoutes/>}>
+                        <Route path="accounts" element={<Account/>}/>
+                        <Route path="economy/:uuid" element={<Economy/>}/>
 
-                            <Route element={<PrivateRoutes/>}>
-                                <Route path="users" element={<User/>}/>
-                            </Route>
-
+                        <Route element={<PrivateRoutes/>}>
+                            <Route path="users" element={<User/>}/>
                         </Route>
 
-                        <Route path={'*'} element={<div>Not Found</div>}/>
-                    </Routes>
-                </BrowserRouter>
-            </AuthProvider>
-        </ThemeProvider>
+                    </Route>
+
+                    <Route path={'*'} element={<div>Not Found</div>}/>
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 

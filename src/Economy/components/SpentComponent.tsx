@@ -1,7 +1,7 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {EconomyInterface, Expenses} from "../interfaces/EconomyInterface";
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, memo, useState} from "react";
 import uuid from "react-uuid";
 import ConfirmModal from "../../components/ConfirmModal";
 import createSpent from "../hooks/createSpent";
@@ -279,4 +279,4 @@ const SpentGroupComponent = (
     );
 }
 
-export default SpentGroupComponent;
+export default memo(SpentGroupComponent);

@@ -7,7 +7,6 @@ import AlertComponent from "../../components/Alert";
 import {useTranslation} from "react-i18next";
 import {AccountInterface} from "../../Account/interfaces/AccountInterface";
 import GetAccountByUuid from "../../Account/hooks/getAccountByUuid";
-import ProgressBarComponent from "../../components/ProgressBar";
 import IncomesComponent from "../components/IncomesComponent";
 import ToastComponent from "../../components/ToastComponent";
 import ResultEconomyBox from "../components/ResultEconomyBox";
@@ -132,7 +131,7 @@ const EconomyView = () => {
                 </div>
             </div>
         );
-    } else {
+    } else if (account.uuid && economy.id) {
         return (
             <div className={'col-md-12 mt-4 ps-5 pe-5'}>
                 <div className="row">
@@ -171,7 +170,7 @@ const EconomyView = () => {
                 <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
             </div>
         );
-    }
+    } else return null;
 }
 
 export default EconomyView;

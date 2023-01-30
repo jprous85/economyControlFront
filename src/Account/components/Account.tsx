@@ -1,5 +1,6 @@
 import BaseLayout from "../../Shared/layouts/baseLayout";
 import AccountView from "../views/AccountView";
+import {memo} from "react";
 
 
 const Account = () => {
@@ -10,4 +11,4 @@ const Account = () => {
     );
 }
 
-export default Account;
+export default memo(Account);

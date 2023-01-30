@@ -3,7 +3,7 @@ import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
 import {Dropdown, DropdownButton} from "react-bootstrap";
 import createIncome from "../hooks/createIncome";
-import React, {ChangeEvent, useRef, useState} from "react";
+import React, {ChangeEvent, memo, useRef, useState} from "react";
 import IncomeModalComponent from "./IncomeModal";
 import uuid from "react-uuid";
 import deleteIncome from "../hooks/deleteIncome";
@@ -240,4 +240,4 @@ const IncomesGroupComponent = (
     );
 }
 
-export default IncomesGroupComponent;
+export default memo(IncomesGroupComponent);

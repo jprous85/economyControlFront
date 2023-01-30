@@ -14,6 +14,8 @@ const NavbarComponent = () => {
     const navigate = useNavigate();
 
     const complex = getLocalStorageComplexData();
+    
+    console.log(complex);
 
     const logout = () => {
         logoutHook().then(() => {

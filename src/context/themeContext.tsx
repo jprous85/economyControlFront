@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, useCallback, useMemo, useState} from 'react';
 
 export const themes = {
     light: 'light',
@@ -12,7 +12,20 @@ export const ThemeProvider = (props: any) => {
 
     const [theme, setTheme] = useState(themes.light);
 
+
+    const changeStyle = useCallback((style: string) => {
+        setTheme(style);
+    }, []);
+
+    const value = useMemo(() => (
+        () => ({
+            theme,
+            changeStyle
+        })
+    ), [theme, changeStyle]);
+
+
     const {children} = props;
 
-    return <ThemeContext.Provider value={{theme, setTheme}}>{children}</ThemeContext.Provider>
+    return <ThemeContext.Provider value={{value, changeStyle}}>{children}</ThemeContext.Provider>
 }

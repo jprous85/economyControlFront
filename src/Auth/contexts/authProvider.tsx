@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useCallback, useMemo, useReducer} from 'react';
 import {authReducer} from "../../reducers/authReducer";
 import {Auth} from "../../interfaces/AuthInterface";
 import { AuthContext } from './authContext';
@@ -32,10 +32,20 @@ export const AuthProvider = ({children}: props) => {
         }
     }
 
+    const changeSetAuth = useCallback((complexData: string) => setAuth(complexData)
+    , [])
+
     const setAuth = (complexData: string) => {
         dispatch({type: 'accessToken', payload: {complexData}});
     }
 
-    return <AuthContext.Provider value={{complexData: complexData, setAuth}}>{children}</AuthContext.Provider>;
+    const value = useMemo(
+        () => ({
+            complexData,
+            changeSetAuth
+        }),
+        [complexData, changeSetAuth]);
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

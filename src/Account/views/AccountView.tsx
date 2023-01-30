@@ -1,6 +1,6 @@
 import {Accordion, Button, Card, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
-import {useCallback, useEffect, useState} from "react";
+import {memo, useCallback, useEffect, useState} from "react";
 import getOwnerAccounts from "../hooks/getOwnerAccounts";
 import getAllAccounts from "../hooks/getAllAccounts";
 import IsAdmin from "../../Shared/utils/isAdmin";
@@ -235,4 +235,4 @@ const AccountView = () => {
 }
 
 
-export default AccountView;
+export default memo(AccountView);

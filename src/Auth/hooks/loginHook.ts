@@ -36,7 +36,7 @@ const LoginHook = async ({email, password, complex, setError}: props) => {
                     userId: response.data.token.token.user_id,
                     user: user
                 });
-                complex.setAuth(response.data.token.accessToken);
+                complex.changeSetAuth(response.data.token.accessToken);
 
             }
 
