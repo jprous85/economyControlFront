@@ -4,5 +4,6 @@ export interface AuthComplex {
     accessToken: string,
     scope: string[],
     userId: number,
-    user: UserInterface
+    user: UserInterface,
+    theme: string
 }

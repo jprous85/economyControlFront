@@ -1,0 +1,42 @@
+@import '../root/root.css';
+
+.black-container {
+    background-color: var(--black);
+    height: 100vh;
+}
+
+.black-link {
+    text-decoration: none;
+    color: white;
+}
+
+.black-card {
+    background-color: #292D3E;
+}
+
+.black-text {
+    color: var(--white);
+}
+
+.black-green-text {
+    color: #7B9168;
+}
+
+.black-button-primary {
+    color: var(--light-orange);
+    border: 1px solid var(--light-orange);
+}
+
+.black-button-primary:hover {
+    color: var(--black);
+    border: 1px solid var(--light-orange);
+    background-color: var(--light-orange);
+}
+
+.black-pin-able {
+    color: var(--white);
+}
+
+.black-pin-unable {
+    color: var(--light-gray);
+}

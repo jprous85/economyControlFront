@@ -34,7 +34,8 @@ const LoginHook = async ({email, password, complex, setError}: props) => {
                     accessToken: response.data.token.accessToken,
                     scope: response.data.token.token.scopes,
                     userId: response.data.token.token.user_id,
-                    user: user
+                    user: user,
+                    theme: response.data.theme
                 });
                 complex.changeSetAuth(response.data.token.accessToken);
 

@@ -18,17 +18,22 @@ interface props {
     accessToken: string;
     scope: string[];
     userId: number;
-    user: UserInterface
+    user: UserInterface;
+    theme: string;
 }
 
-export const saveLocalStorageComplexData = ({accessToken, scope, userId, user}: props) => {
+export const saveLocalStorageComplexData = ({accessToken, scope, userId, user, theme}: props) => {
 
     const AuthConfidence: AuthComplex = {
         accessToken,
         scope,
         userId,
-        user
+        user,
+        theme
     }
+    
+    console.log(AuthConfidence);
+    
     saveLocalStorage('complexData', encryptData(JSON.stringify(AuthConfidence)));
 }
 
@@ -38,4 +43,12 @@ export const saveLocalStorageSimpleComplexData = (type: string, value: string) =
         [type]: value
     }
     saveLocalStorage('complexData', encryptData(JSON.stringify(AuthConfidence)));
+}
+
+export const saveLocalStorageToComplexDataStack = (type: string, value: string) =>
+{
+    const complexData = getLocalStorageComplexData();
+    complexData[type] = value;
+
+    saveLocalStorageComplexData(complexData);
 }

@@ -147,6 +147,7 @@ const EconomyView = () => {
                             <BlockSeparator title={'Incomes'}/>
                             <IncomesComponent
                                 getEconomyFunction={getEconomyFunction}
+                                account={account}
                                 economy={economy}
                                 setToast={setToast}
                                 setToastMessage={setToastMessage}
@@ -158,6 +159,7 @@ const EconomyView = () => {
                             <BlockSeparator title={'Spent'} />
                             <SpentGroupComponent
                                 getEconomyFunction={getEconomyFunction}
+                                account={account}
                                 economy={economy}
                                 setToast={setToast}
                                 setToastMessage={setToastMessage}

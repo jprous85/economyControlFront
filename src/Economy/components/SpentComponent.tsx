@@ -1,7 +1,7 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {EconomyInterface, Expenses} from "../interfaces/EconomyInterface";
-import React, {ChangeEvent, memo, useState} from "react";
+import React, {ChangeEvent, memo, useContext, useState} from "react";
 import uuid from "react-uuid";
 import ConfirmModal from "../../components/ConfirmModal";
 import createSpent from "../hooks/createSpent";
@@ -11,6 +11,9 @@ import SpentModalComponent from "./SpentModal";
 import updatePaidStatusSpent from "../hooks/updatePaidStatusSpent";
 import updateFixedStatus from "../hooks/updateFixedStatus";
 import TooltipOverlay from "../../components/TooltipOverlay";
+import {ThemeContext} from "../../context/themeContext";
+import {AccountInterface} from "../../Account/interfaces/AccountInterface";
+import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
 
 const SPENT = {
     "uuid": uuid(),
@@ -23,6 +26,7 @@ const SPENT = {
 
 interface props {
     getEconomyFunction: Function;
+    account: AccountInterface;
     economy: EconomyInterface;
     setToast: Function;
     setToastMessage: Function;
@@ -33,12 +37,18 @@ interface props {
 const SpentGroupComponent = (
     {
         getEconomyFunction,
+        account,
         economy,
         setToast,
         setToastMessage,
         spent,
         setSpent,
     }: props) => {
+
+    const themeContext = useContext(ThemeContext);
+    const localStorage = getLocalStorageComplexData();
+
+    const isOwner = account.ownersAccount.includes(localStorage.userId);
 
     const [showSpentModal, setShowSpentModal] = useState(false);
 
@@ -180,39 +190,14 @@ const SpentGroupComponent = (
                 const nameFormatted = (internSpent.paid) ?
                     <del className={'text-muted'}>{internSpent.name}</del> :
                     <span><strong>{internSpent.name}</strong></span>;
-
-                const colorPin = (internSpent.fixed) ? 'black' : 'lightgray';
+;
 
                 return (
                     <div className={'row mb-2'} key={index}>
-                        <div className="col-9 col-sm-1 text-md-center text-sm-start">
-                            <TooltipOverlay
-                                key={index}
-                                tooltipText={'Spent fixed'}
-                                placement={'bottom'}>
-                                <span>
-                                    <FontAwesomeIcon style={{color: colorPin}}
-                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
-                                                     onClick={(e: any) => {
-                                                         changeFixedData(internSpent, 'fixed', !internSpent.fixed);
-                                                     }}
-                                    />
-                                </span>
-                            </TooltipOverlay>
-                            {(internSpent.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this spent is fixed'}</small></span>}
-                        </div>
-                        <div className="col-3 col-sm-1">
-                            <div className="form-check form-switch">
-                                <input className="form-check-input float-end success" type="checkbox"
-                                       role="switch"
-                                       id="account-table-paid" checked={(internSpent.paid)}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                           changeSpentData(internSpent, 'paid', (e.target.checked) ? 1 : 0);
-                                       }}/>
-                            </div>
-                        </div>
-                        <div className="col-6 col-sm-5">{nameFormatted}</div>
-                        <div className="col-6 col-sm-2 text-end"><strong>{internSpent.amount} €</strong></div>
+                        {pinButtonChangeStatusOfFixed(internSpent, index)}
+                        {switchChangePaidStatusOfSpend(internSpent)}
+                        <div className={`col-6 col-sm-5 ${themeContext.theme}-text`}>{nameFormatted}</div>
+                        <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}><strong>{internSpent.amount} €</strong></div>
                         <div className="col-12 col-sm-2">{menuActionOptions(internSpent)}</div>
                         <hr className={'mt-3'}/>
                     </div>
@@ -221,7 +206,48 @@ const SpentGroupComponent = (
         );
     }
 
+    const switchChangePaidStatusOfSpend = (internSpent: Expenses) => {
+        if (!isOwner) return null;
+        return (
+            <div className="col-3 col-sm-1">
+                <div className="form-check form-switch">
+                    <input className="form-check-input float-end success" type="checkbox"
+                           role="switch"
+                           id="account-table-paid" checked={(internSpent.paid)}
+                           onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                               changeSpentData(internSpent, 'paid', (e.target.checked) ? 1 : 0);
+                           }}/>
+                </div>
+            </div>
+        );
+    }
+
+    const pinButtonChangeStatusOfFixed = (internSpent: Expenses, index: number) => {
+        if (!isOwner) return null;
+        const colorPin = (internSpent.fixed) ? themeContext.theme+'-pin-able' : themeContext.theme+'-pin-unable';
+
+        return (
+            <div className="col-9 col-sm-1 text-md-center text-sm-start">
+                <TooltipOverlay
+                    key={index}
+                    tooltipText={'Spent fixed'}
+                    placement={'bottom'}>
+                                <span>
+                                    <FontAwesomeIcon className={colorPin}
+                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
+                                                     onClick={(e: any) => {
+                                                         changeFixedData(internSpent, 'fixed', !internSpent.fixed);
+                                                     }}
+                                    />
+                                </span>
+                </TooltipOverlay>
+                {(internSpent.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this spent is fixed'}</small></span>}
+            </div>
+        );
+    }
+
     const menuActionOptions = (internSpent: Expenses) => {
+        if (!isOwner) return null;
         return (
             <div className={'row'}>
                 <div className="col-6 text-center">
@@ -244,8 +270,22 @@ const SpentGroupComponent = (
         );
     }
 
+    const buttonCreateNewSpent = () => {
+        if (!isOwner) return null;
+        return (
+            <div>
+                <div className="d-grid gap-2">
+                    <button className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
+                            onClick={() => createEmptySpent()}>
+                        <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="card border-primary">
+        <div className={`card ${themeContext.theme}-card`}>
             <div className="card-body">
                 <div>
                     <div className={'mt-3'}>
@@ -254,13 +294,7 @@ const SpentGroupComponent = (
                         }
                     </div>
                 </div>
-                <div>
-                    <div className="d-grid gap-2">
-                        <a href="#" className={'btn btn-outline-primary'}
-                           onClick={() => createEmptySpent()}>
-                            <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso</a>
-                    </div>
-                </div>
+                {buttonCreateNewSpent()}
                 <SpentModalComponent
                     showSpent={showSpentModal}
                     setShowSpent={setShowSpentModal}

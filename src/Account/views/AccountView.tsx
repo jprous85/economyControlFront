@@ -1,6 +1,6 @@
 import {Accordion, Button, Card, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
-import {memo, useCallback, useEffect, useState} from "react";
+import {memo, useCallback, useContext, useEffect, useState} from "react";
 import getOwnerAccounts from "../hooks/getOwnerAccounts";
 import getAllAccounts from "../hooks/getAllAccounts";
 import IsAdmin from "../../Shared/utils/isAdmin";
@@ -16,6 +16,7 @@ import updateAccount from "../hooks/updateAccount";
 import deleteAccount from "../hooks/deleteAccount";
 import AccountModal from "../components/AccountModal";
 import AlertComponent from "../../components/Alert";
+import {ThemeContext} from "../../context/themeContext";
 
 const INITIAL_ACCOUNT = {
     "id": null,
@@ -30,6 +31,9 @@ const INITIAL_ACCOUNT = {
 }
 
 const AccountView = () => {
+
+    const themeContext = useContext(ThemeContext);
+
 
     const {t} = useTranslation();
 
@@ -167,13 +171,13 @@ const AccountView = () => {
     if (!loading) {
         return (
             <Row className={'ps-5 pe-4'}>
-                <Col md={12} className={'text-end mt-4'}>
-                    <Button variant="primary"
-                            onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
-                </Col>
                 <Col md={12} className={'mt-4'}>
                     {alert.show && <AlertComponent style={'warning'} message={alert.message}/>}
                     <Row>
+                        <Col md={12} className={'text-end mt-4'}>
+                            <Button variant="primary"
+                                    onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
+                        </Col>
                         {accounts.map((account: AccountInterface) => {
 
                             const users = (JSON.parse(account.users));
@@ -186,11 +190,11 @@ const AccountView = () => {
 
                             return (
                                 <Col key={account.id} sm={3} className={'mb-3'}>
-                                    <Card className={'p-2'}>
+                                    <Card className={`p-2 ${themeContext.theme}-card`}>
                                         <Card.Body>
                                             <Row>
                                                 <Col md={12} className={'d-flex justify-content-between'}>
-                                                    <a href={`/economy/${account.uuid}`}><strong>{account.name}</strong></a>
+                                                    <a className={`${themeContext.theme}-link`} href={`/economy/${account.uuid}`}><strong>{account.name}</strong></a>
                                                     {dropdownMenu}
                                                 </Col>
                                                 <Col md={12} className={'mt-3'}>

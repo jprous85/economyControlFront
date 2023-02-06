@@ -1,9 +1,8 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
-import {Dropdown, DropdownButton} from "react-bootstrap";
 import createIncome from "../hooks/createIncome";
-import React, {ChangeEvent, memo, useRef, useState} from "react";
+import React, {memo, useContext, useState} from "react";
 import IncomeModalComponent from "./IncomeModal";
 import uuid from "react-uuid";
 import deleteIncome from "../hooks/deleteIncome";
@@ -11,6 +10,10 @@ import ConfirmModal from "../../components/ConfirmModal";
 import updateIncome from "../hooks/updateIncome";
 import updateFixedStatus from "../hooks/updateFixedStatus";
 import TooltipOverlay from "../../components/TooltipOverlay";
+import {ThemeContext} from "../../context/themeContext";
+import IsAdmin from "../../Shared/utils/isAdmin";
+import {AccountInterface} from "../../Account/interfaces/AccountInterface";
+import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
 
 const INCOME = {
     "uuid": '',
@@ -22,6 +25,7 @@ const INCOME = {
 
 interface props {
     getEconomyFunction: Function;
+    account: AccountInterface;
     economy: EconomyInterface;
     setToast: Function;
     setToastMessage: Function;
@@ -32,6 +36,7 @@ interface props {
 const IncomesGroupComponent = (
     {
         getEconomyFunction,
+        account,
         economy,
         setToast,
         setToastMessage,
@@ -39,7 +44,11 @@ const IncomesGroupComponent = (
         setIncome,
     }: props) => {
 
-    const itemEls = useRef<Array<HTMLElement>>([]);
+    const themeContext = useContext(ThemeContext);
+    const localStorage = getLocalStorageComplexData();
+
+    const admin = IsAdmin();
+    const isOwner = account.ownersAccount.includes(localStorage.userId);
 
     const [showIncomeModal, setShowIncomeModal] = useState(false);
 
@@ -151,29 +160,11 @@ const IncomesGroupComponent = (
 
         return (
             Array.from(incomes).map((income: any, index: number) => {
-
-                const colorPin = (income.fixed) ? 'black' : 'lightgray';
-
                 return (
                     <div className={'row mb-2'} key={index}>
-                        <div className="col-12 col-sm-1 text-md-center text-sm-start">
-                            <TooltipOverlay
-                                key={index}
-                                tooltipText={'Income fixed'}
-                                placement={'bottom'}>
-                                <span>
-                                    <FontAwesomeIcon style={{color: colorPin}}
-                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
-                                                     onClick={(e: any) => {
-                                                         changeFixedData(income, 'fixed', !income.fixed);
-                                                     }}
-                                    />
-                                </span>
-                            </TooltipOverlay>
-                            {(income.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
-                        </div>
-                        <div className="col-7"><strong>{income.name}</strong></div>
-                        <div className="col-6 col-sm-2 text-end"><strong>{income.amount} €</strong></div>
+                        {pinButtonChangeStatusOfFixed(income, index)}
+                        <div className={`col-7 ${themeContext.theme}-text`}><strong>{income.name}</strong></div>
+                        <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}><strong>{income.amount} €</strong></div>
                         <div className="col-md-2 col-sm-12">{menuActionOptions(income)}</div>
                         <hr className={'mt-3'}/>
                     </div>
@@ -183,11 +174,14 @@ const IncomesGroupComponent = (
     }
 
     const menuActionOptions = (income: Incomes) => {
+
+        if (!isOwner) return null;
+
         return (
             <div className={'row'}>
                 <div className="col-6 text-center">
                     <a href="#"
-                       className="btn btn-warning text-end"
+                       className={`btn btn-warning text-end`}
                        onClick={() => updateOldIncome(income)}
                     >
                         <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
@@ -195,7 +189,7 @@ const IncomesGroupComponent = (
                 </div>
                 <div className="col-6 text-center">
                     <a href="#"
-                       className="btn btn-outline-danger text-end"
+                       className={`btn btn-outline-danger text-end`}
                        onClick={() => deleteSelectedIncome(income)}
                     >
                         <FontAwesomeIcon icon={icon({name: 'trash', style: 'solid'})}/>
@@ -205,8 +199,47 @@ const IncomesGroupComponent = (
         );
     }
 
+    const pinButtonChangeStatusOfFixed = (income: Incomes, index: number) => {
+        if (!isOwner) return null;
+
+        const colorPin = (income.fixed) ? themeContext.theme+'-pin-able' : themeContext.theme+'-pin-unable';
+
+        return (
+            <div className="col-12 col-sm-1 text-md-center text-sm-start">
+                <TooltipOverlay
+                    key={index}
+                    tooltipText={'Income fixed'}
+                    placement={'bottom'}>
+                                <span>
+                                    <FontAwesomeIcon className={colorPin}
+                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
+                                                     onClick={(e: any) => {
+                                                         changeFixedData(income, 'fixed', !income.fixed);
+                                                     }}
+                                    />
+                                </span>
+                </TooltipOverlay>
+                {(income.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
+            </div>
+        );
+    }
+
+    const buttonCreateNewIncome = () => {
+        if (!isOwner) return null;
+        return (
+            <div>
+                <div className="d-grid gap-2">
+                    <button type={'button'} className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
+                            onClick={() => createEmptyIncome()}>
+                        <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="card border-primary">
+        <div className={`card ${themeContext.theme}-card`}>
             <div className="card-body">
                 <div>
                     <div className={'mt-3'}>
@@ -215,13 +248,7 @@ const IncomesGroupComponent = (
                         }
                     </div>
                 </div>
-                <div>
-                    <div className="d-grid gap-2">
-                        <a href="#" className={'btn btn-outline-primary'}
-                           onClick={() => createEmptyIncome()}>
-                            <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso</a>
-                    </div>
-                </div>
+                {buttonCreateNewIncome()}
                 <IncomeModalComponent
                     showIncome={showIncomeModal}
                     setShowIncome={setShowIncomeModal}

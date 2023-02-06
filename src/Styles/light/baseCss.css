@@ -1,0 +1,23 @@
+@import '../root/root.css';
+
+.light-container {
+    background-color: #ffffff;
+    height: 100vh;
+}
+
+.light-link {
+    text-decoration: none;
+    color: black;
+}
+
+.light-card {
+    background-color: #f2f2f2;
+}
+
+.light-text {
+    color: #212228;
+}
+
+.light-green-text {
+    color: #7B9168;
+}

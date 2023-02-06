@@ -1,5 +1,10 @@
 import NavbarComponent from "../../components/NavbarComponent";
 import {Container, Row} from "react-bootstrap";
+import {useContext} from "react";
+import {ThemeContext} from "../../context/themeContext";
+
+import './../../Styles/light/baseCss.css';
+import './../../Styles/black/baseCss.css';
 
 interface props {
     children: JSX.Element | JSX.Element[]
@@ -7,10 +12,12 @@ interface props {
 
 const BaseLayout = ({children}: props) => {
 
+    const themeContext = useContext(ThemeContext);
+
     return (
         <Container fluid>
             <NavbarComponent />
-            <Row className={'mb-5'}>
+            <Row className={`${themeContext.theme}-container`}>
                 {children}
             </Row>
         </Container>
