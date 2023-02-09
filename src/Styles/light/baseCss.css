@@ -21,3 +21,11 @@
 .light-green-text {
     color: #7B9168;
 }
+
+.light-pin-able {
+    color: var(--black);
+}
+
+.light-pin-unable {
+    color: #afafaf;
+}
