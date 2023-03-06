@@ -11,11 +11,11 @@ const BlockSeparator = ({title}: props) => {
 
     return (
         <div className="row mt-3 mb-3">
-            <div className="col-md-2">
+            <div className="col-md-1">
                 <hr className={`${themeContext.theme}-text`}/>
             </div>
-            <div className={`col-md-1 text-center ${themeContext.theme}-text`}>{title}</div>
-            <div className="col-md-9">
+            <div className={`col-md-3 text-center ${themeContext.theme}-text`}>{title}</div>
+            <div className="col-md-8">
                 <hr className={`${themeContext.theme}-text`}/>
             </div>
         </div>

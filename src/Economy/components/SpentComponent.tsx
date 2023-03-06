@@ -14,6 +14,8 @@ import TooltipOverlay from "../../components/TooltipOverlay";
 import {ThemeContext} from "../../context/themeContext";
 import {AccountInterface} from "../../Account/interfaces/AccountInterface";
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
+import BlockSeparator from "./BlockSeparator";
+import DataCategoriesComponent from "./DataCategoriesComponent";
 
 const SPENT = {
     "uuid": uuid(),
@@ -185,25 +187,25 @@ const SpentGroupComponent = (
         if (expenses.length === 0) return null;
 
         return (
-            Array.from(expenses).map((internSpent: any, index: number) => {
-
-                const nameFormatted = (internSpent.paid) ?
-                    <del className={'text-muted'}>{internSpent.name}</del> :
-                    <span><strong>{internSpent.name}</strong></span>;
-;
-
+            Object.keys(expenses).map((key: any) => {
                 return (
-                    <div className={'row mb-2'} key={index}>
-                        {pinButtonChangeStatusOfFixed(internSpent, index)}
-                        {switchChangePaidStatusOfSpend(internSpent)}
-                        <div className={`col-6 col-sm-5 ${themeContext.theme}-text`}>{nameFormatted}</div>
-                        <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}><strong>{internSpent.amount} €</strong></div>
-                        <div className="col-12 col-sm-2">{menuActionOptions(internSpent)}</div>
-                        <hr className={'mt-3'}/>
+                    <div className={`col-md-6`}>
+                        <div className={`card ${themeContext.theme}-card`}>
+                            <div className="card-body">
+                                <BlockSeparator title={key}/>
+                                <DataCategoriesComponent
+                                    items={expenses[key]}
+                                    type={'spent'}
+                                    pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
+                                    menuActionOptions={menuActionOptions}
+                                    switchChangePaidStatusOfSpend={switchChangePaidStatusOfSpend}
+                                />
+                            </div>
+                        </div>
                     </div>
-                )
+                );
             })
-        );
+        )
     }
 
     const switchChangePaidStatusOfSpend = (internSpent: Expenses) => {
@@ -224,7 +226,7 @@ const SpentGroupComponent = (
 
     const pinButtonChangeStatusOfFixed = (internSpent: Expenses, index: number) => {
         if (!isOwner) return null;
-        const colorPin = (internSpent.fixed) ? themeContext.theme+'-pin-able' : themeContext.theme+'-pin-unable';
+        const colorPin = (internSpent.fixed) ? themeContext.theme + '-pin-able' : themeContext.theme + '-pin-unable';
 
         return (
             <div className="col-9 col-sm-1 text-md-center text-sm-start">
@@ -241,7 +243,8 @@ const SpentGroupComponent = (
                                     />
                                 </span>
                 </TooltipOverlay>
-                {(internSpent.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this spent is fixed'}</small></span>}
+                {(internSpent.fixed) &&
+                <span className={'d-sm-none ms-3 text-muted'}><small>{'this spent is fixed'}</small></span>}
             </div>
         );
     }
@@ -285,30 +288,30 @@ const SpentGroupComponent = (
     }
 
     return (
-        <div className={`card ${themeContext.theme}-card`}>
-            <div className="card-body">
-                <div>
-                    <div className={'mt-3'}>
-                        {
-                            showExpenses()
-                        }
-                    </div>
-                </div>
-                {buttonCreateNewSpent()}
-                <SpentModalComponent
-                    showSpent={showSpentModal}
-                    setShowSpent={setShowSpentModal}
-                    spent={spent}
-                    setSpent={setSpent}
-                    callback={dispatchFunction}
-                />
-                <ConfirmModal
-                    title={"Delete user"}
-                    message={`Are you sure to delete ${spent.name}?`}
-                    callback={dispatchFunction}
-                    show={deleteShowModal}
-                    setShow={setDeleteShowModal}/>
+        <div>
+            <div className={'row'}>
+                {
+                    showExpenses()
+                }
             </div>
+            <div className={`card ${themeContext.theme}-card mt-3`}>
+                <div className="card-body">
+                    {buttonCreateNewSpent()}
+                </div>
+            </div>
+            <SpentModalComponent
+                showSpent={showSpentModal}
+                setShowSpent={setShowSpentModal}
+                spent={spent}
+                setSpent={setSpent}
+                callback={dispatchFunction}
+            />
+            <ConfirmModal
+                title={"Delete user"}
+                message={`Are you sure to delete ${spent.name}?`}
+                callback={dispatchFunction}
+                show={deleteShowModal}
+                setShow={setDeleteShowModal}/>
         </div>
     );
 }

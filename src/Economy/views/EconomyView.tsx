@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import GetEconomy from "../hooks/getEconomy";
 import {useParams} from "react-router-dom";
 import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
 import Loading from "../../components/Loading";
@@ -13,6 +12,7 @@ import ResultEconomyBox from "../components/ResultEconomyBox";
 import InformationEconomyBox from "../components/InformationEconomyBox";
 import BlockSeparator from "../components/BlockSeparator";
 import SpentGroupComponent from "../components/SpentComponent";
+import GetEconomyWithCategoriesGroup from "../hooks/getEconomyWithCategoriesGroup";
 
 const ACCOUNT_INITIAL = {
     "id": null,
@@ -49,6 +49,7 @@ const ECONOMY_INITIAL = {
 const INCOME = {
     "uuid": null,
     "name": '',
+    "category": '',
     "amount": 0,
     "fixed": false,
     "active": true
@@ -57,6 +58,7 @@ const INCOME = {
 const SPENT = {
     "uuid": null,
     "name": '',
+    "category": '',
     "amount": 0,
     "paid": false,
     "fixed": false,
@@ -106,7 +108,7 @@ const EconomyView = () => {
     }
 
     const getEconomyFunction = () => {
-        GetEconomy(uuid).then((response: any) => {
+        GetEconomyWithCategoriesGroup(uuid).then((response: any) => {
             if (response.data.status === 404) {
                 setAlert({
                     show: true,
@@ -143,7 +145,7 @@ const EconomyView = () => {
                     </div>
 
                     <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                             <BlockSeparator title={'Incomes'}/>
                             <IncomesComponent
                                 getEconomyFunction={getEconomyFunction}
@@ -155,7 +157,7 @@ const EconomyView = () => {
                                 setIncome={setIncome}
                             />
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                             <BlockSeparator title={'Spent'} />
                             <SpentGroupComponent
                                 getEconomyFunction={getEconomyFunction}

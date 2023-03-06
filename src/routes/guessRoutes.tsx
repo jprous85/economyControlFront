@@ -10,8 +10,9 @@ const GuessRoutes = () => {
 
 
     const scope = getLocalStorageComplexData();
+console.log(scope);
 
-    const exist = (scope) ? scope.scope.map((sc: string) => SCOPES.includes(sc)) : false;
+    const exist = (scope.scope) ? scope.scope.map((sc: string) => SCOPES.includes(sc)) : false;
     return ( exist ) ? <Outlet/> : <Navigate to={'/login'}/>;
 }
 

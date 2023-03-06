@@ -1,6 +1,6 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
-import {EconomyInterface, Expenses, Incomes} from "../interfaces/EconomyInterface";
+import {EconomyInterface, Incomes} from "../interfaces/EconomyInterface";
 import createIncome from "../hooks/createIncome";
 import React, {memo, useContext, useState} from "react";
 import IncomeModalComponent from "./IncomeModal";
@@ -14,6 +14,8 @@ import {ThemeContext} from "../../context/themeContext";
 import IsAdmin from "../../Shared/utils/isAdmin";
 import {AccountInterface} from "../../Account/interfaces/AccountInterface";
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
+import BlockSeparator from "./BlockSeparator";
+import DataCategoriesComponent from "./DataCategoriesComponent";
 
 const INCOME = {
     "uuid": '',
@@ -159,18 +161,25 @@ const IncomesGroupComponent = (
         if (incomes.length === 0) return null;
 
         return (
-            Array.from(incomes).map((income: any, index: number) => {
+            Object.keys(incomes).map((key: any) => {
                 return (
-                    <div className={'row mb-2'} key={index}>
-                        {pinButtonChangeStatusOfFixed(income, index)}
-                        <div className={`col-7 ${themeContext.theme}-text`}><strong>{income.name}</strong></div>
-                        <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}><strong>{income.amount} €</strong></div>
-                        <div className="col-md-2 col-sm-12">{menuActionOptions(income)}</div>
-                        <hr className={'mt-3'}/>
+                    <div className={`col-md-6`}>
+                        <div className={`card ${themeContext.theme}-card`}>
+                            <div className="card-body">
+                                <BlockSeparator title={key}/>
+                                <DataCategoriesComponent
+                                    items={incomes[key]}
+                                    type={'income'}
+                                    pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
+                                    menuActionOptions={menuActionOptions}
+                                    switchChangePaidStatusOfSpend={null}
+                                />
+                            </div>
+                        </div>
                     </div>
-                )
+                );
             })
-        );
+        )
     }
 
     const menuActionOptions = (income: Incomes) => {
@@ -202,7 +211,7 @@ const IncomesGroupComponent = (
     const pinButtonChangeStatusOfFixed = (income: Incomes, index: number) => {
         if (!isOwner) return null;
 
-        const colorPin = (income.fixed) ? themeContext.theme+'-pin-able' : themeContext.theme+'-pin-unable';
+        const colorPin = (income.fixed) ? themeContext.theme + '-pin-able' : themeContext.theme + '-pin-unable';
 
         return (
             <div className="col-12 col-sm-1 text-md-center text-sm-start">
@@ -219,7 +228,8 @@ const IncomesGroupComponent = (
                                     />
                                 </span>
                 </TooltipOverlay>
-                {(income.fixed) && <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
+                {(income.fixed) &&
+                <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
             </div>
         );
     }
@@ -239,32 +249,35 @@ const IncomesGroupComponent = (
     }
 
     return (
-        <div className={`card ${themeContext.theme}-card`}>
-            <div className="card-body">
-                <div>
-                    <div className={'mt-3'}>
-                        {
-                            showIncomes()
-                        }
-                    </div>
-                </div>
-                {buttonCreateNewIncome()}
-                <IncomeModalComponent
-                    showIncome={showIncomeModal}
-                    setShowIncome={setShowIncomeModal}
-                    income={income}
-                    setIncome={setIncome}
-                    callback={dispatchFunction}
-                />
-                <ConfirmModal
-                    title={"Delete user"}
-                    message={`Are you sure to delete ${income.name}?`}
-                    callback={dispatchFunction}
-                    show={deleteShowModal}
-                    setShow={setDeleteShowModal}/>
+
+        <div>
+            <div className={'row'}>
+                {
+                    showIncomes()
+                }
             </div>
+            <div className={`card ${themeContext.theme}-card mt-3`}>
+                <div className="card-body">
+                    {buttonCreateNewIncome()}
+                </div>
+            </div>
+            <IncomeModalComponent
+                showIncome={showIncomeModal}
+                setShowIncome={setShowIncomeModal}
+                income={income}
+                setIncome={setIncome}
+                callback={dispatchFunction}
+            />
+            <ConfirmModal
+                title={"Delete user"}
+                message={`Are you sure to delete ${income.name}?`}
+                callback={dispatchFunction}
+                show={deleteShowModal}
+                setShow={setDeleteShowModal}/>
+
         </div>
-    );
+    )
+        ;
 }
 
 export default memo(IncomesGroupComponent);

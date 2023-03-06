@@ -16,6 +16,7 @@ export interface EconomyInterface {
 export interface Incomes {
     "uuid": string | null,
     "name": string,
+    "category": string,
     "amount": number,
     "fixed": boolean,
     "active": boolean
@@ -24,6 +25,7 @@ export interface Incomes {
 export interface Expenses {
     "uuid": string | null,
     "name": string,
+    "category": string,
     "amount": number,
     "paid": boolean,
     "fixed": boolean,
