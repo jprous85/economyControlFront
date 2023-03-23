@@ -22,8 +22,6 @@ export const ThemeProvider = (props: any) => {
         setState({...state, theme: newTheme})
     }
 
-    console.log(themeSavedInLocalStorage);
-
     const initState = {
         theme: (themeSavedInLocalStorage) ? themeSavedInLocalStorage['theme'] : 'light',
         setTheme: changeTheme

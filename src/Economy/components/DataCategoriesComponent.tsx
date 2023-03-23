@@ -20,11 +20,13 @@ const DataCategoriesComponent = (
     }: props) => {
 
 
+    if (!items) return <></>;
 
     const dataContainer = items.map((item: any, index: number) => {
         if (type === 'income') {
             return (
                 <IncomeContainer
+                    key={index}
                     income={item}
                     pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
                     menuActionOptions={menuActionOptions}
@@ -35,6 +37,7 @@ const DataCategoriesComponent = (
         if (type === 'spent') {
             return (
                 <SpentContainer
+                    key={index}
                     spent={item}
                     pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
                     menuActionOptions={menuActionOptions}

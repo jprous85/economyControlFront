@@ -56,17 +56,21 @@ const IncomesGroupComponent = (
 
     const [deleteShowModal, setDeleteShowModal] = useState(false);
 
-    const [customFunction, setCustomFunction] = useState<any>(() => {
-    });
+    const [customFunction, setCustomFunction] = useState<any>(() => {});
 
     const [incomes] = useState<any>(economy.economic_management.incomes);
+    const categories = Object.keys(incomes);
 
     const createNewIncome = (economy: EconomyInterface, income: Incomes) => {
         createIncome(economy, income).then((createResponse: any) => {
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-                incomes.push(income);
+                if (incomes[income.category]) {
+                    incomes[income.category].push(income);
+                } else {
+                    incomes[income.category] = [income];
+                }
                 getEconomyFunction();
             }
         })
@@ -78,11 +82,28 @@ const IncomesGroupComponent = (
                 setToast(true);
                 setToastMessage(createResponse.data);
 
-                incomes.map((incomeCore: Incomes, index: number) => {
-                    if (incomeCore.uuid === income.uuid) {
-                        incomes[index] = income;
-                    }
+                Object.keys(incomes).map((categories: string) => {
+                    incomes[categories].map((incomeCore: Incomes, index: number) => {
+                        if (incomeCore.uuid === income.uuid) {
+
+                            if (categories === income.category) {
+                                incomes[categories][index] = income;
+                            }
+                            else {
+                                const indexOf = incomes[categories].indexOf(income);
+                                if (index > -1) { // only splice array when item is found
+                                    incomes[categories].splice(indexOf, 1); // 2nd parameter means remove one item only
+                                }
+                                if (incomes[categories].length === 0) {
+                                    delete(incomes[categories]);
+                                }
+                                incomes[income.category] = [income];
+                            }
+
+                        }
+                    });
                 });
+
                 getEconomyFunction();
             }
         })
@@ -94,9 +115,9 @@ const IncomesGroupComponent = (
                 setToast(true);
                 setToastMessage(updateResponse.data);
 
-                incomes.map((incomeCore: Incomes, index: number) => {
+                incomes[income.category].map((incomeCore: Incomes, index: number) => {
                     if (incomeCore.uuid === income.uuid) {
-                        incomes[index] = income;
+                        incomes[income.category][index] = income;
                     }
                 });
                 getEconomyFunction();
@@ -109,10 +130,15 @@ const IncomesGroupComponent = (
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-                const index = incomes.indexOf(income);
+                const index = incomes[income.category].indexOf(income);
                 if (index > -1) { // only splice array when item is found
-                    incomes.splice(index, 1); // 2nd parameter means remove one item only
+                    incomes[income.category].splice(index, 1); // 2nd parameter means remove one item only
                 }
+
+                if (incomes[income.category].length === 0) {
+                    delete(incomes[income.category]);
+                }
+
                 getEconomyFunction();
             }
         })
@@ -163,7 +189,7 @@ const IncomesGroupComponent = (
         return (
             Object.keys(incomes).map((key: any) => {
                 return (
-                    <div className={`col-md-6`}>
+                    <div className={`col-md-6`} key={key}>
                         <div className={`card ${themeContext.theme}-card`}>
                             <div className="card-body">
                                 <BlockSeparator title={key}/>
@@ -266,6 +292,7 @@ const IncomesGroupComponent = (
                 setShowIncome={setShowIncomeModal}
                 income={income}
                 setIncome={setIncome}
+                categories={categories}
                 callback={dispatchFunction}
             />
             <ConfirmModal

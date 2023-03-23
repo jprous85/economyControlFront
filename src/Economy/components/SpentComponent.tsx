@@ -189,7 +189,7 @@ const SpentGroupComponent = (
         return (
             Object.keys(expenses).map((key: any) => {
                 return (
-                    <div className={`col-md-6`}>
+                    <div className={`col-md-6`} key={key}>
                         <div className={`card ${themeContext.theme}-card`}>
                             <div className="card-body">
                                 <BlockSeparator title={key}/>
