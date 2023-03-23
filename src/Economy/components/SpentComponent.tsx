@@ -60,13 +60,20 @@ const SpentGroupComponent = (
     });
 
     const [expenses] = useState<any>(economy.economic_management.expenses);
+    const categories = Object.keys(expenses);
 
     const createNewSpent = (economy: EconomyInterface, spent: Expenses) => {
         createSpent(economy, spent).then((createResponse: any) => {
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-                expenses.push(spent);
+
+                if (expenses[spent.category]) {
+                    expenses[spent.category].push(spent);
+                } else {
+                    expenses[spent.category] = [spent];
+                }
+
                 getEconomyFunction();
             }
         })
@@ -78,11 +85,31 @@ const SpentGroupComponent = (
                 setToast(true);
                 setToastMessage(createResponse.data);
 
-                expenses.map((spentCore: Expenses, index: number) => {
-                    if (spentCore.uuid === spent.uuid) {
-                        expenses[index] = spent;
-                    }
+                Object.keys(expenses).map((categories: string) => {
+                    expenses[categories].map((spentCore: Expenses, index: number) => {
+                        if (spentCore.uuid === spent.uuid) {
+
+                            if (categories === spent.category) {
+                                expenses[categories][index] = spent;
+                            }
+                            else {
+                                expenses[categories].splice(index, 1); // 2nd parameter means remove one item only
+
+                                if (expenses[categories].length === 0) {
+                                    delete(expenses[categories]);
+                                }
+
+                                if (expenses[spent.category]) {
+                                    expenses[spent.category].push(spent);
+                                } else {
+                                    expenses[spent.category] = [spent];
+                                }
+                            }
+
+                        }
+                    });
                 });
+
                 getEconomyFunction();
             }
         })
@@ -94,9 +121,9 @@ const SpentGroupComponent = (
                 setToast(true);
                 setToastMessage(updateResponse.data);
 
-                expenses.map((spentCore: Expenses, index: number) => {
+                expenses[spent.category].map((spentCore: Expenses, index: number) => {
                     if (spentCore.uuid === spent.uuid) {
-                        expenses[index] = spent;
+                        expenses[spent.category][index] = spent;
                     }
                 });
                 getEconomyFunction();
@@ -110,9 +137,9 @@ const SpentGroupComponent = (
                 setToast(true);
                 setToastMessage(updateResponse.data);
 
-                expenses.map((spentCore: Expenses, index: number) => {
+                expenses[spent.category].map((spentCore: Expenses, index: number) => {
                     if (spentCore.uuid === spent.uuid) {
-                        expenses[index] = spent;
+                        expenses[spent.category][index] = spent;
                     }
                 });
                 getEconomyFunction();
@@ -126,10 +153,15 @@ const SpentGroupComponent = (
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-                const index = expenses.indexOf(spent);
+                const index = expenses[spent.category].indexOf(spent);
                 if (index > -1) { // only splice array when item is found
-                    expenses.splice(index, 1); // 2nd parameter means remove one item only
+                    expenses[spent.category].splice(index, 1); // 2nd parameter means remove one item only
                 }
+
+                if (expenses[spent.category].length === 0) {
+                    delete(expenses[spent.category]);
+                }
+
                 getEconomyFunction();
             }
         })
@@ -304,6 +336,7 @@ const SpentGroupComponent = (
                 setShowSpent={setShowSpentModal}
                 spent={spent}
                 setSpent={setSpent}
+                categories={categories}
                 callback={dispatchFunction}
             />
             <ConfirmModal

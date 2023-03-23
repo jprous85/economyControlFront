@@ -66,11 +66,13 @@ const IncomesGroupComponent = (
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
+
                 if (incomes[income.category]) {
                     incomes[income.category].push(income);
                 } else {
                     incomes[income.category] = [income];
                 }
+
                 getEconomyFunction();
             }
         })
@@ -90,14 +92,17 @@ const IncomesGroupComponent = (
                                 incomes[categories][index] = income;
                             }
                             else {
-                                const indexOf = incomes[categories].indexOf(income);
-                                if (index > -1) { // only splice array when item is found
-                                    incomes[categories].splice(indexOf, 1); // 2nd parameter means remove one item only
-                                }
+                                incomes[categories].splice(index, 1); // 2nd parameter means remove one item only
+
                                 if (incomes[categories].length === 0) {
                                     delete(incomes[categories]);
                                 }
-                                incomes[income.category] = [income];
+
+                                if (incomes[income.category]) {
+                                    incomes[income.category].push(income);
+                                } else {
+                                    incomes[income.category] = [income];
+                                }
                             }
 
                         }

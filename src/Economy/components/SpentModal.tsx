@@ -1,12 +1,14 @@
 import SimpleModalDialog from "../../components/SimpleModalDialog";
 import {Expenses, Incomes} from "../interfaces/EconomyInterface";
 import React, {ChangeEvent} from "react";
+import Capitalize from "../../Shared/utils/Capitalize";
 
 interface props {
     showSpent: boolean;
     setShowSpent: Function;
     spent: Expenses;
     setSpent: Function;
+    categories: Array<string>
     callback: Function;
 }
 
@@ -16,6 +18,7 @@ const SpentModalComponent = (
         setShowSpent,
         spent,
         setSpent,
+        categories,
         callback,
     }: props
 ) => {
@@ -40,6 +43,15 @@ const SpentModalComponent = (
                             <label htmlFor="income-name" className={'form-label'}>{'Income name'}</label>
                             <input type="text" className="form-control" id={'income-name'} value={spent.name}
                                    onChange={(e: ChangeEvent<HTMLInputElement>) => changeSpentData('name', e.target.value)}/>
+                        </div>
+                        <div className="col-md-12 mt-3">
+                            <label htmlFor="income-category" className={'form-label'}>{'Income Category'}</label>
+                            <input className={'form-control'} list={"category-list-choice"} id={'category-list-input'} value={spent.category ?? ''} name={'income-category'}
+                                   onChange={(e: ChangeEvent<HTMLInputElement>) => changeSpentData('category', Capitalize(e.target.value))}/>
+                            <datalist id={'category-list-choice'}>
+                                {categories.map((c: string) => <option value={Capitalize(c)} key={c}>
+                                    {Capitalize(c)}</option>)}
+                            </datalist>
                         </div>
                         <div className="row">
                             <div className="col-md-6 mt-3">
