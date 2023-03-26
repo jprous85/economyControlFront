@@ -1,6 +1,6 @@
 @import '../root/root.css';
 
-.black-container {
+.dark-container {
     background-color: var(--black);
     height: 100vh;
     width: 100%;
@@ -9,42 +9,42 @@
     overflow-y: auto;
 }
 
-.black-link {
+.dark-link {
     text-decoration: none;
     color: white;
 }
 
-.black-card {
+.dark-card {
     background-color: #292D3E;
 }
 
-.black-text {
+.dark-text {
     color: var(--white);
 }
 
-.black-green-text {
+.dark-green-text {
     color: #7B9168;
 }
 
-.black-button-primary {
+.dark-button-primary {
     color: var(--light-orange);
     border: 1px solid var(--light-orange);
 }
 
-.black-button-primary:hover {
+.dark-button-primary:hover {
     color: var(--black);
     border: 1px solid var(--light-orange);
     background-color: var(--light-orange);
 }
 
-.black-pin-able {
+.dark-pin-able {
     color: var(--white);
 }
 
-.black-pin-unable {
+.dark-pin-unable {
     color: var(--light-gray);
 }
 
-.black-bordered {
+.dark-bordered {
     border: 1px solid var(--white);
 }

@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useMemo, useState} from 'react';
+import React, {createContext, useState} from 'react';
 import {getLocalStorageComplexData} from "../Shared/Infrastructure/Persistence/localStorageComplexData";
 
 export const themes = {

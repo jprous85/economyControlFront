@@ -137,10 +137,10 @@ const EconomyView = () => {
         return (
             <div className={'col-md-12 mt-4 ps-5 pe-5'}>
                 <div className="row">
-                    <div className="col-md-8 mb-4">
+                    <div className="col-md-7 mb-4">
                         <InformationEconomyBox account={account} economy={economy}/>
                     </div>
-                    <div className="col-md-4 mb-4">
+                    <div className="col-md-5 mb-4">
                         <ResultEconomyBox economy={economy}/>
                     </div>
 

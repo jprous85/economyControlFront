@@ -91,12 +91,11 @@ const SpentGroupComponent = (
 
                             if (categories === spent.category) {
                                 expenses[categories][index] = spent;
-                            }
-                            else {
+                            } else {
                                 expenses[categories].splice(index, 1); // 2nd parameter means remove one item only
 
                                 if (expenses[categories].length === 0) {
-                                    delete(expenses[categories]);
+                                    delete (expenses[categories]);
                                 }
 
                                 if (expenses[spent.category]) {
@@ -159,7 +158,7 @@ const SpentGroupComponent = (
                 }
 
                 if (expenses[spent.category].length === 0) {
-                    delete(expenses[spent.category]);
+                    delete (expenses[spent.category]);
                 }
 
                 getEconomyFunction();
@@ -309,11 +308,15 @@ const SpentGroupComponent = (
         if (!isOwner) return null;
         return (
             <div>
-                <div className="d-grid gap-2">
-                    <button className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
-                            onClick={() => createEmptySpent()}>
-                        <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
-                    </button>
+                <div className={`card ${themeContext.theme}-card mt-3`}>
+                    <div className="card-body">
+                        <div className="d-grid gap-2">
+                            <button className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
+                                    onClick={() => createEmptySpent()}>
+                                <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -326,11 +329,7 @@ const SpentGroupComponent = (
                     showExpenses()
                 }
             </div>
-            <div className={`card ${themeContext.theme}-card mt-3`}>
-                <div className="card-body">
-                    {buttonCreateNewSpent()}
-                </div>
-            </div>
+            {buttonCreateNewSpent()}
             <SpentModalComponent
                 showSpent={showSpentModal}
                 setShowSpent={setShowSpentModal}

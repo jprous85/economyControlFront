@@ -10,10 +10,11 @@ interface props {
     email: string,
     password: string,
     complex: AuthContextProps,
+    themeProvider: any,
     setError: Function
 }
 
-const LoginHook = async ({email, password, complex, setError}: props) => {
+const LoginHook = async ({email, password, complex, themeProvider, setError}: props) => {
 
     let user: any = null;
 
@@ -38,7 +39,7 @@ const LoginHook = async ({email, password, complex, setError}: props) => {
                     theme: response.data.theme
                 });
                 complex.changeSetAuth(response.data.token.accessToken);
-
+                themeProvider.setTheme(response.data.theme);
             }
 
         } else {

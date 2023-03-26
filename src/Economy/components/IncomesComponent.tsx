@@ -56,7 +56,8 @@ const IncomesGroupComponent = (
 
     const [deleteShowModal, setDeleteShowModal] = useState(false);
 
-    const [customFunction, setCustomFunction] = useState<any>(() => {});
+    const [customFunction, setCustomFunction] = useState<any>(() => {
+    });
 
     const [incomes] = useState<any>(economy.economic_management.incomes);
     const categories = Object.keys(incomes);
@@ -90,12 +91,11 @@ const IncomesGroupComponent = (
 
                             if (categories === income.category) {
                                 incomes[categories][index] = income;
-                            }
-                            else {
+                            } else {
                                 incomes[categories].splice(index, 1); // 2nd parameter means remove one item only
 
                                 if (incomes[categories].length === 0) {
-                                    delete(incomes[categories]);
+                                    delete (incomes[categories]);
                                 }
 
                                 if (incomes[income.category]) {
@@ -141,7 +141,7 @@ const IncomesGroupComponent = (
                 }
 
                 if (incomes[income.category].length === 0) {
-                    delete(incomes[income.category]);
+                    delete (incomes[income.category]);
                 }
 
                 getEconomyFunction();
@@ -269,11 +269,16 @@ const IncomesGroupComponent = (
         if (!isOwner) return null;
         return (
             <div>
-                <div className="d-grid gap-2">
-                    <button type={'button'} className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
-                            onClick={() => createEmptyIncome()}>
-                        <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
-                    </button>
+                <div className={`card ${themeContext.theme}-card mt-3`}>
+                    <div className="card-body">
+                        <div className="d-grid gap-2">
+                            <button type={'button'}
+                                    className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
+                                    onClick={() => createEmptyIncome()}>
+                                <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -287,11 +292,7 @@ const IncomesGroupComponent = (
                     showIncomes()
                 }
             </div>
-            <div className={`card ${themeContext.theme}-card mt-3`}>
-                <div className="card-body">
-                    {buttonCreateNewIncome()}
-                </div>
-            </div>
+            {buttonCreateNewIncome()}
             <IncomeModalComponent
                 showIncome={showIncomeModal}
                 setShowIncome={setShowIncomeModal}

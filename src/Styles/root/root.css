@@ -4,3 +4,7 @@
     --light-orange: #d7b17e;
     --black: #18191A;
 }
+
+.padding-top-navbar {
+    padding-top: 80px;
+}

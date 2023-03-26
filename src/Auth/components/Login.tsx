@@ -8,11 +8,14 @@ import LoginView from "../views/login/loginView";
 import {ROLES, ROLES_NAME_BY_ID} from "../../Shared/Constants/RolesConstants";
 import axios from "axios";
 import env from "react-dotenv";
+import {ThemeContext} from "../../context/themeContext";
 
 const Login = () => {
 const BASE_URL = env.URL_API;
 
     const complex = useContext(AuthContext);
+    const themeProvider = useContext(ThemeContext);
+
     const navigate = useNavigate();
 
     const [credentials, setCredentials] = useState({
@@ -30,7 +33,6 @@ const BASE_URL = env.URL_API;
     const healthCheck = () => {
         axios.get(`${BASE_URL}/health-check`)
             .then((response: any) => {
-                console.log(response);
                 if (response.response.status === 404) {
                     setError('No API connection found');
                 }
@@ -47,6 +49,7 @@ const BASE_URL = env.URL_API;
             email: credentials.email,
             password: credentials.password,
             complex,
+            themeProvider,
             setError
         })
             .then((response) => {

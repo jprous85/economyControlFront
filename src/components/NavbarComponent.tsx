@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {
     getLocalStorageComplexData,
-    saveLocalStorageSimpleComplexData, saveLocalStorageToComplexDataStack
+    saveLocalStorageToComplexDataStack
 } from "../Shared/Infrastructure/Persistence/localStorageComplexData";
 import logoutHook from "../Auth/hooks/LogoutHook";
 import {saveLocalStorage} from "../Shared/Infrastructure/Persistence/localStorage";
@@ -26,14 +26,14 @@ const NavbarComponent = () => {
     }
 
     const changeTheme = () => {
-        const newTheme = (complex.theme === 'black') ? 'light' : 'black';
+        const newTheme = (complex.theme === 'dark') ? 'light' : 'dark';
         saveLocalStorageToComplexDataStack('theme', newTheme);
         themeProvider.setTheme(newTheme);
         determinateThemesIcons();
     }
 
     const determinateThemesIcons = () => {
-        if (complex.theme === 'black') {
+        if (complex.theme === 'dark') {
             return (
                 <FontAwesomeIcon
                     className={'text-secondary'}
@@ -62,7 +62,7 @@ const NavbarComponent = () => {
     const userLink = (IsAdmin()) ? <Nav.Link href="/users">Users</Nav.Link> : null;
 
     return (
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="light" expand="lg" fixed={'top'}>
             <Container fluid>
                 <Navbar.Brand href="#">Navbar scroll</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />

@@ -31,9 +31,7 @@ export const saveLocalStorageComplexData = ({accessToken, scope, userId, user, t
         user,
         theme
     }
-    
-    console.log(AuthConfidence);
-    
+
     saveLocalStorage('complexData', encryptData(JSON.stringify(AuthConfidence)));
 }
 

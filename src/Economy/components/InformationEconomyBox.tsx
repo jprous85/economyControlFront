@@ -1,8 +1,6 @@
 import {EconomyInterface} from "../interfaces/EconomyInterface";
 import {AccountInterface} from "../../Account/interfaces/AccountInterface";
-import React, {ChangeEvent, useContext} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
+import React, {useContext} from "react";
 import {ThemeContext} from "../../context/themeContext";
 
 interface props {
@@ -22,7 +20,7 @@ const InformationEconomyBox = ({account, economy}: props) => {
                 <div className={`card ${themeContext.theme}-card`}>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-11">
+                            <div className="col-md-12">
                                 <div className="row">
                                     <div className="col-md-10">
                                         <h4 className={`${themeContext.theme}-text`}>{account.name}</h4>
@@ -30,22 +28,6 @@ const InformationEconomyBox = ({account, economy}: props) => {
                                     <div className="col-md-2 text-end">
                                         {arrayUsers.length > 1 && <span className={'text-warning'}><small><strong>Cuenta compartida</strong></small></span>}
                                     </div>
-                                </div>
-                            </div>
-                            <div className="col-md-1">
-                                <div className="form-check form-switch justify-content-end text-end">
-                                    <input className="form-check-input" type="checkbox"
-                                           role="switch"
-                                           id="account-active" checked={(account.active) === 1}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                               //changeIncomeData('active', (e.target.checked) ? 1 : 0)
-                                           }}/>
-                                    <a href="#"
-                                       className="btn btn-warning text-end"
-                                        //onClick={() => updateOldIncome(income)}
-                                    >
-                                        <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +44,7 @@ const InformationEconomyBox = ({account, economy}: props) => {
                                     <span>{'Account created at'}: </span><span>{account.created_at}</span></div>
                             </div>
                             <div className="col-md-8">
-                                <div>
+                                <div className={`${themeContext.theme}-text`}>
                                     {account.description}
                                 </div>
                             </div>
