@@ -155,7 +155,10 @@ const AccountView = () => {
             <DropdownButton
                 align="end"
                 variant="none"
-                title={<FontAwesomeIcon icon={icon({name: "ellipsis"})}/>}
+                title={
+                    <FontAwesomeIcon className={`${themeContext.theme}-text`}
+                                     icon={icon({name: "ellipsis"})}/>
+                }
                 id="dropdown-menu-align-end"
             >
                 <Dropdown.Item eventKey="1"
@@ -194,15 +197,21 @@ const AccountView = () => {
                                         <Card.Body>
                                             <Row>
                                                 <Col md={12} className={'d-flex justify-content-between'}>
-                                                    <a className={`${themeContext.theme}-link`} href={`/economy/${account.uuid}`}><strong>{account.name}</strong></a>
+                                                    <a className={`${themeContext.theme}-link`}
+                                                       href={`/economy/${account.uuid}`}><strong>{account.name}</strong></a>
                                                     {dropdownMenu}
                                                 </Col>
                                                 <Col md={12} className={'mt-3'}>
                                                     <Accordion>
                                                         <Accordion.Item eventKey="0">
-                                                            <Accordion.Header>Description</Accordion.Header>
-                                                            <Accordion.Body>
-                                                                {account.description ?? '---'}
+                                                            <Accordion.Header>
+                                                                Description
+                                                            </Accordion.Header>
+                                                            <Accordion.Body
+                                                                className={`${themeContext.theme}-modal-card`}>
+                                                                <span className={`${themeContext.theme}-text`}>
+                                                                    {account.description ?? '---'}
+                                                                </span>
                                                             </Accordion.Body>
                                                         </Accordion.Item>
                                                     </Accordion>

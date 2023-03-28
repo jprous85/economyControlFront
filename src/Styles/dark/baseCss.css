@@ -18,6 +18,14 @@
     background-color: #292D3E;
 }
 
+.dark-modal-card {
+    background-color: #292D3E;
+}
+
+.dark-modal-input {
+    background-color: #999999;
+}
+
 .dark-text {
     color: var(--white);
 }

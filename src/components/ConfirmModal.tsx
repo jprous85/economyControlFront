@@ -1,4 +1,6 @@
 import SimpleModalDialog from "./SimpleModalDialog";
+import {useContext} from "react";
+import {ThemeContext} from "../context/themeContext";
 
 interface props {
     title: string,
@@ -9,6 +11,8 @@ interface props {
 }
 
 const ConfirmModal = ({show, setShow, title, message, callback}: props) => {
+
+    const themeContext = useContext(ThemeContext);
 
     return (
         <SimpleModalDialog
@@ -21,7 +25,9 @@ const ConfirmModal = ({show, setShow, title, message, callback}: props) => {
         >
             <div className="row">
                 <div className="col-md-12">
-                    {message}
+                    <span className={`${themeContext.theme}-text`}>
+                        {message}
+                    </span>
                 </div>
             </div>
         </SimpleModalDialog>

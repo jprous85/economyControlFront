@@ -1,5 +1,5 @@
 import SimpleModalDialog from "../../components/SimpleModalDialog";
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useContext, useEffect, useState} from "react";
 import {AccountInterface} from "../interfaces/AccountInterface";
 import {UserInterface} from "../../User/interfaces/UserInterface";
 import getUser from "../../User/hooks/getUser";
@@ -12,6 +12,7 @@ import deleteElement from "../hooks/DeleteElementOfArray";
 import deleteOwnerAccount from "../hooks/deleteOwnerAccount";
 import includeOwnerAccount from "../hooks/includeOwnerAccount";
 import includeElement from "../hooks/IncludeElementOfArray";
+import {ThemeContext} from "../../context/themeContext";
 
 interface props {
     show: boolean,
@@ -43,6 +44,7 @@ const INITIAL_USER = {
 
 const AccountModal = ({show, setShow, account, setAccount, callback, setToast, setToastMessage}: props) => {
 
+    const themeContext = useContext(ThemeContext);
     const complex = getLocalStorageComplexData();
 
     const [deleteShowModal, setDeleteShowModal] = useState(false);
@@ -159,13 +161,13 @@ const AccountModal = ({show, setShow, account, setAccount, callback, setToast, s
 
                         <div className="row mt-3">
                             <div className="col-md-12">
-                                <label htmlFor="account-name">Name</label>
-                                <input type="text" id={'account-name'} className={'form-control'} value={account.name}
+                                <label htmlFor="account-name" className={`form-label ${themeContext.theme}-text`}>Name</label>
+                                <input type="text" id={'account-name'} className={`form-control ${themeContext.theme}-modal-input`} value={account.name}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeAccountData('name', e.target.value)}/>
                             </div>
                             <div className="col-md-12 mt-3">
-                                <label htmlFor="account-description">Description</label>
-                                <textarea id={'account-description'} className={'form-control'}
+                                <label htmlFor="account-description" className={`form-label ${themeContext.theme}-text`}>Description</label>
+                                <textarea id={'account-description'} className={`form-control ${themeContext.theme}-modal-input`}
                                           value={account.description ?? ''}
                                           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => changeAccountData('description', e.target.value)}
                                 >

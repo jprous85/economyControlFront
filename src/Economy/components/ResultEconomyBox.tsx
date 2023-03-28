@@ -47,14 +47,6 @@ const ResultEconomyBox = ({economy}: props) => {
                             <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.pendingToPay} €</strong></span>
                         </div>
                     </div>
-                    <div className="row mt-2">
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{'Pending to pay'}:</strong>&nbsp;&nbsp;</span>
-                        </div>
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.pendingToPay} €</strong></span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

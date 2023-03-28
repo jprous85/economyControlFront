@@ -194,7 +194,7 @@ const IncomesGroupComponent = (
         return (
             Object.keys(incomes).map((key: any) => {
                 return (
-                    <div className={`col-md-6`} key={key}>
+                    <div className={`col-md-6 mt-3`} key={key}>
                         <div className={`card ${themeContext.theme}-card`}>
                             <div className="card-body">
                                 <BlockSeparator title={key}/>
@@ -269,7 +269,7 @@ const IncomesGroupComponent = (
         if (!isOwner) return null;
         return (
             <div>
-                <div className={`card ${themeContext.theme}-card mt-3`}>
+                <div className={`card ${themeContext.theme}-card mt-3 mb-3`}>
                     <div className="card-body">
                         <div className="d-grid gap-2">
                             <button type={'button'}

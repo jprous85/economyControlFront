@@ -10,7 +10,7 @@ const BlockSeparator = ({title}: props) => {
     const themeContext = useContext(ThemeContext);
 
     return (
-        <div className="row mt-3 mb-3">
+        <div className="row">
             <div className="col-md-1">
                 <hr className={`${themeContext.theme}-text`}/>
             </div>
