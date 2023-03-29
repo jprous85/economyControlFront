@@ -50,7 +50,7 @@ const IncomesGroupComponent = (
     const localStorage = getLocalStorageComplexData();
 
     const admin = IsAdmin();
-    const isOwner = account.ownersAccount.includes(localStorage.userId);
+    const isOwner = account.ownersAccount.includes(localStorage.userId) || admin;
 
     const [showIncomeModal, setShowIncomeModal] = useState(false);
 

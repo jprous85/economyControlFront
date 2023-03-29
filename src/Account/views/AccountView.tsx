@@ -187,7 +187,7 @@ const AccountView = () => {
                             const owners = (JSON.parse(account.ownersAccount));
 
                             let dropdownMenu = null;
-                            if (owners.includes(complex.userId)) {
+                            if (owners.includes(complex.userId) || IsAdmin()) {
                                 dropdownMenu = dropdownMenuOptions(account);
                             }
 

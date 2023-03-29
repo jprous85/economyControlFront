@@ -16,6 +16,7 @@ import {AccountInterface} from "../../Account/interfaces/AccountInterface";
 import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistence/localStorageComplexData";
 import BlockSeparator from "./BlockSeparator";
 import DataCategoriesComponent from "./DataCategoriesComponent";
+import IsAdmin from "../../Shared/utils/isAdmin";
 
 const SPENT = {
     "uuid": uuid(),
@@ -50,7 +51,8 @@ const SpentGroupComponent = (
     const themeContext = useContext(ThemeContext);
     const localStorage = getLocalStorageComplexData();
 
-    const isOwner = account.ownersAccount.includes(localStorage.userId);
+    const admin = IsAdmin();
+    const isOwner = account.ownersAccount.includes(localStorage.userId) || admin;
 
     const [showSpentModal, setShowSpentModal] = useState(false);
 
