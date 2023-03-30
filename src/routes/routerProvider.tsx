@@ -17,9 +17,7 @@ const Routers = () => {
     return (
         <ThemeProvider>
             <AuthProvider>
-                <BrowserRouter
-                    basename={(env.ENVIRONMENT === 'production') ? 'http://programandoconcabeza.com/economyControl' : '/'}
-                >
+                <BrowserRouter>
                     <Routes>
                         <Route path="login" element={<Login/>}/>
 

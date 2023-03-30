@@ -1,6 +1,6 @@
 {
   "name": "economy_control_front",
-  "homepage": "http://programandoconcabeza.com/economyControl",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
