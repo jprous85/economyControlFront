@@ -10,13 +10,16 @@ import GuessRoutes from './guessRoutes';
 import Login from "../Auth/components/Login";
 import Account from "../Account/components/Account";
 import Economy from "../Economy/components/Economy";
+import env from "react-dotenv";
 
 const Routers = () => {
 
     return (
         <ThemeProvider>
             <AuthProvider>
-                <BrowserRouter>
+                <BrowserRouter
+                    basename={(env.ENVIRONMENT === 'production') ? 'http://programandoconcabeza.com/economyControl' : '/'}
+                >
                     <Routes>
                         <Route path="login" element={<Login/>}/>
 
