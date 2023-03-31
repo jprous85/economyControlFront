@@ -42,7 +42,8 @@
     "start": "react-dotenv && react-scripts start",
     "build": "react-dotenv && react-scripts build",
     "test": "react-dotenv && react-scripts test",
-    "eject": "react-dotenv && react-scripts eject"
+    "eject": "react-dotenv && react-scripts eject",
+    "deploy": "react-dotenv && react-scripts build && aws s3 sync build/ s3://economycontrol.programandoconcabeza.com --acl public-read"
   },
   "eslintConfig": {
     "extends": [
