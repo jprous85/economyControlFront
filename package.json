@@ -43,7 +43,9 @@
     "build": "react-dotenv && react-scripts build",
     "test": "react-dotenv && react-scripts test",
     "eject": "react-dotenv && react-scripts eject",
-    "deploy": "react-dotenv && react-scripts build && aws s3 sync build/ s3://economycontrol.programandoconcabeza.com --acl public-read"
+    "deploy": "react-dotenv && react-scripts build && aws s3 sync build/ s3://economycontrol.programandoconcabeza.com --acl public-read",
+    "deploy-cloudfront": "aws cloudfront create-invalidation --distribution-id E2AMVG531MTDTD --paths '/*'",
+    "client-deploy": "npm run deploy && npm run deploy-cloudfront"
   },
   "eslintConfig": {
     "extends": [
@@ -65,6 +67,7 @@
   },
   "react-dotenv": {
     "whitelist": [
+      "ENVIRONMENT",
       "URL_API",
       "CRYPTO_TOKEN"
     ]

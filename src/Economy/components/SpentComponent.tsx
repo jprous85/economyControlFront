@@ -106,7 +106,7 @@ const SpentGroupComponent = (
                                     expenses[spent.category] = [spent];
                                 }
                             }
-
+                            return;
                         }
                     });
                 });
@@ -125,6 +125,7 @@ const SpentGroupComponent = (
                 expenses[spent.category].map((spentCore: Expenses, index: number) => {
                     if (spentCore.uuid === spent.uuid) {
                         expenses[spent.category][index] = spent;
+                        return;
                     }
                 });
                 getEconomyFunction();
@@ -141,6 +142,7 @@ const SpentGroupComponent = (
                 expenses[spent.category].map((spentCore: Expenses, index: number) => {
                     if (spentCore.uuid === spent.uuid) {
                         expenses[spent.category][index] = spent;
+                        return;
                     }
                 });
                 getEconomyFunction();

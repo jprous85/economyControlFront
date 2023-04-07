@@ -19,7 +19,7 @@ const IncomeContainer = ({income, pinButtonChangeStatusOfFixed, menuActionOption
             {pinButtonChangeStatusOfFixed(income, index)}
             <div className={`col-7 ${themeContext.theme}-text`}><strong>{income.name}</strong></div>
             <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}>
-                <strong>{income.amount} €</strong></div>
+                <strong>{Number(income.amount).toFixed(2)} €</strong></div>
             <div className="col-md-2 col-sm-12">{menuActionOptions(income)}</div>
             <hr className={'mt-3'}/>
         </div>

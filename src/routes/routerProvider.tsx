@@ -13,7 +13,6 @@ import Economy from "../Economy/components/Economy";
 import env from "react-dotenv";
 
 const Routers = () => {
-
     return (
         <ThemeProvider>
             <AuthProvider>

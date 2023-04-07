@@ -20,7 +20,7 @@ const ResultEconomyBox = ({economy}: props) => {
                             <span className={`${themeContext.theme}-green-text`}><strong>{'Total incomes'}:</strong>&nbsp;&nbsp;</span>
                         </div>
                         <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalIncomes} €</strong></span>
+                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalIncomes.toFixed(2)} €</strong></span>
                         </div>
                     </div>
                     <div className="row mt-2">
@@ -28,7 +28,7 @@ const ResultEconomyBox = ({economy}: props) => {
                             <span className={`${themeContext.theme}-green-text`}><strong>{'Total expenses'}:</strong>&nbsp;&nbsp;</span>
                         </div>
                         <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalExpenses} €</strong></span>
+                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalExpenses.toFixed(2)} €</strong></span>
                         </div>
                     </div>
                     <div className="row mt-2">
@@ -36,7 +36,7 @@ const ResultEconomyBox = ({economy}: props) => {
                             <span className={`${themeContext.theme}-green-text`}><strong>{'Total paid'}:</strong>&nbsp;&nbsp;</span>
                         </div>
                         <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalPaid} €</strong></span>
+                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalPaid.toFixed(2)} €</strong></span>
                         </div>
                     </div>
                     <div className="row mt-2">
@@ -44,7 +44,7 @@ const ResultEconomyBox = ({economy}: props) => {
                             <span className={`${themeContext.theme}-green-text`}><strong>{'Pending to pay'}:</strong>&nbsp;&nbsp;</span>
                         </div>
                         <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.pendingToPay} €</strong></span>
+                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.pendingToPay.toFixed(2)} €</strong></span>
                         </div>
                     </div>
                 </div>

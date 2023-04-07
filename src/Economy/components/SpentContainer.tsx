@@ -23,7 +23,7 @@ const IncomeContainer = ({spent, pinButtonChangeStatusOfFixed, menuActionOptions
             {pinButtonChangeStatusOfFixed(spent, index)}
             {switchChangePaidStatusOfSpend(spent)}
             <div className={`col-6 col-sm-5 ${themeContext.theme}-text`}>{nameFormatted}</div>
-            <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}><strong>{spent.amount} €</strong></div>
+            <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}><strong>{Number(spent.amount).toFixed(2)} €</strong></div>
             <div className="col-12 col-sm-2">{menuActionOptions(spent)}</div>
             <hr className={'mt-3'}/>
         </div>
