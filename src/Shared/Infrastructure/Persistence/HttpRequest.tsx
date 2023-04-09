@@ -8,7 +8,6 @@ export const httpRequest = async(type: string, url: string, body: object | null,
 
     const BASE_URL = (env.ENVIRONMENT === 'production') ? env.URL_API : 'http://localhost:8081/api';
 
-    console.log(BASE_URL);
     const config = {
         headers: {Authorization: (accessToken) ? `Bearer ${(accessToken)}` : 'none'}
     };
