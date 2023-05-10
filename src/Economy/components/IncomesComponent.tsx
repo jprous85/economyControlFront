@@ -306,8 +306,10 @@ const IncomesGroupComponent = (
                 message={`Are you sure to delete ${income.name}?`}
                 callback={dispatchFunction}
                 show={deleteShowModal}
-                setShow={setDeleteShowModal}/>
-
+                setShow={setDeleteShowModal}
+                saveBtn={null}
+                closeBtn={null}
+            />
         </div>
     )
         ;

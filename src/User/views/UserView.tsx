@@ -147,7 +147,10 @@ const UserView = ({loading, users, setUsers}: props) => {
                 message={`Are you sure to delete ${user.name}?`}
                 callback={dispatchFunction}
                 show={deleteShowModal}
-                setShow={setDeleteShowModal}/>
+                setShow={setDeleteShowModal}
+                saveBtn={null}
+                closeBtn={null}
+            />
             <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
         </BaseLayout>
     );

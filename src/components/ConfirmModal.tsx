@@ -7,10 +7,12 @@ interface props {
     message: string,
     show: boolean,
     setShow: Function,
-    callback: Function
+    callback: Function,
+    closeBtn : null|string,
+    saveBtn: null|string
 }
 
-const ConfirmModal = ({show, setShow, title, message, callback}: props) => {
+const ConfirmModal = ({show, setShow, title, message, callback, closeBtn, saveBtn}: props) => {
 
     const themeContext = useContext(ThemeContext);
 
@@ -20,8 +22,8 @@ const ConfirmModal = ({show, setShow, title, message, callback}: props) => {
             show={show}
             setShow={setShow}
             callback={callback}
-            closeBtn={'Cancel'}
-            saveBtn={'Delete'}
+            closeBtn={closeBtn ?? 'Close'}
+            saveBtn={saveBtn ?? 'Confirm'}
         >
             <div className="row">
                 <div className="col-md-12">

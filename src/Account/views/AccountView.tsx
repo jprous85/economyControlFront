@@ -17,6 +17,7 @@ import deleteAccount from "../hooks/deleteAccount";
 import AccountModal from "../components/AccountModal";
 import AlertComponent from "../../components/Alert";
 import {ThemeContext} from "../../context/themeContext";
+import duplicateAccount from "../hooks/duplicateAccount";
 
 const INITIAL_ACCOUNT = {
     "id": null,
@@ -50,6 +51,7 @@ const AccountView = () => {
     const [toastMessage, setToastMessage] = useState<string>('');
 
     const [createOrUpdateShowModal, setCreateOrUpdateShowModal] = useState(false);
+    const [duplicateShowModal, setDuplicateShowModal] = useState(false);
     const [deleteShowModal, setDeleteShowModal] = useState(false);
 
     const [accounts, setAccounts] = useState<Array<AccountInterface>>([]);
@@ -79,6 +81,16 @@ const AccountView = () => {
         });
     }
 
+    const duplicateMainAccount = (account: AccountInterface) => {
+        duplicateAccount(account).then((updateResponse: any) => {
+            if (updateResponse) {
+                setToastMessage(updateResponse.data);
+                getAccountsRequest();
+                setToast(true);
+            }
+        });
+    }
+
     const deleteSelectedAccount = (account: AccountInterface) => {
         deleteAccount(account).then((deleteResponse: any) => {
             if (deleteResponse) {
@@ -99,6 +111,12 @@ const AccountView = () => {
         setAccount(account);
         setCreateOrUpdateShowModal(true);
         assignFunction(() => updateOldAccount);
+    }, [createOrUpdateShowModal]);
+
+    const duplicateAccountFunction = useCallback((account: AccountInterface) => {
+        setAccount(account);
+        setDuplicateShowModal(true);
+        assignFunction(() => duplicateMainAccount);
     }, [createOrUpdateShowModal]);
 
     const deleteAccountFunction = useCallback((account: AccountInterface) => {
@@ -163,7 +181,8 @@ const AccountView = () => {
             >
                 <Dropdown.Item eventKey="1"
                                onClick={() => updateAccountFunction(account)}>{t('accounts.view.editBtnAccount')}</Dropdown.Item>
-                <Dropdown.Item eventKey="2">{t('accounts.view.duplicateBtnAccount')}</Dropdown.Item>
+                <Dropdown.Item eventKey="2"
+                               onClick={() => duplicateAccountFunction(account)}>{t('accounts.view.duplicateBtnAccount')}</Dropdown.Item>
                 <Dropdown.Divider/>
                 <Dropdown.Item eventKey="4"
                                onClick={() => deleteAccountFunction(account)}>{t('accounts.view.deleteBtnAccount')}</Dropdown.Item>
@@ -234,11 +253,23 @@ const AccountView = () => {
                     setToastMessage={setToastMessage}
                 />
                 <ConfirmModal
-                    title={"Delete user"}
+                    title={"Duplicate account"}
+                    message={`Do you want to duplicate ${account.name}?`}
+                    callback={dispatchFunction}
+                    show={duplicateShowModal}
+                    setShow={setDuplicateShowModal}
+                    saveBtn={'Duplicate'}
+                    closeBtn={null}
+                />
+                <ConfirmModal
+                    title={"Delete account"}
                     message={`Are you sure to delete ${account.name}?`}
                     callback={dispatchFunction}
                     show={deleteShowModal}
-                    setShow={setDeleteShowModal}/>
+                    setShow={setDeleteShowModal}
+                    saveBtn={null}
+                    closeBtn={null}
+                />
                 <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
             </Row>
         );

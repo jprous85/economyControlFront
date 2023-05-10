@@ -231,7 +231,9 @@ const AccountModal = ({show, setShow, account, setAccount, callback, setToast, s
                 message={`Are you sure to delete ${account.name}?`}
                 callback={deleteUser}
                 show={deleteShowModal}
-                setShow={setDeleteShowModal}/>
+                setShow={setDeleteShowModal}
+                closeBtn={null}
+                saveBtn={null}/>
         </SimpleModalDialog>
     );
 }
