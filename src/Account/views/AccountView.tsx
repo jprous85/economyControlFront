@@ -196,7 +196,7 @@ const AccountView = () => {
                 <Col md={12} className={'mt-4'}>
                     {alert.show && <AlertComponent style={'warning'} message={alert.message}/>}
                     <Row>
-                        <Col md={12} className={'text-end mt-4'}>
+                        <Col md={12} className={'text-end mt-2 mb-4'}>
                             <Button variant="primary"
                                     onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
                         </Col>

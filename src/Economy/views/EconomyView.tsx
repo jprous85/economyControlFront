@@ -38,7 +38,8 @@ const ECONOMY_INITIAL = {
             "totalIncomes": 0,
             "totalPaid": 0,
             "pendingToPay": 0,
-            "totalExpenses": 0
+            "totalExpenses": 0,
+            "balance": 0
         }
     },
     "active": 0,
@@ -135,7 +136,7 @@ const EconomyView = () => {
         );
     } else if (account.uuid && economy.id) {
         return (
-            <div className={'col-md-12 mt-4 ps-5 pe-5'}>
+            <div className={'col-md-12 mt-4 mb-5 ps-5 pe-5'}>
                 <div className="row">
                     <div className="col-md-7 mb-4">
                         <InformationEconomyBox account={account} economy={economy}/>

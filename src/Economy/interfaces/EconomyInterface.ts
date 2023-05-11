@@ -36,5 +36,6 @@ export interface Totals {
     "totalIncomes": number,
     "totalPaid": number,
     "pendingToPay": number,
-    "totalExpenses": number
+    "totalExpenses": number,
+    "balance": number,
 }
