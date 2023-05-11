@@ -19,7 +19,7 @@ import DataCategoriesComponent from "./DataCategoriesComponent";
 import IsAdmin from "../../Shared/utils/isAdmin";
 
 const SPENT = {
-    "uuid": uuid(),
+    "uuid": '',
     "name": '',
     "amount": 0,
     "paid": false,
@@ -181,6 +181,7 @@ const SpentGroupComponent = (
     }
 
     const createEmptySpent = () => {
+        SPENT.uuid = uuid();
         setSpent(SPENT);
         setShowSpentModal(true);
         assignFunction(() => createNewSpent)
