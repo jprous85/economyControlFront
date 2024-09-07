@@ -11,7 +11,7 @@ import env from "react-dotenv";
 import {ThemeContext} from "../../context/themeContext";
 
 const Login = () => {
-    const BASE_URL = (env.ENVIRONMENT === 'production') ? env.URL_API : 'http://localhost:8081/api';
+    const BASE_URL = (env.ENVIRONMENT === 'production') ? env.URL_API : env.URL_API_LOCAL;
 
     const complex = useContext(AuthContext);
     const themeProvider = useContext(ThemeContext);
@@ -53,6 +53,9 @@ const Login = () => {
             setError
         })
             .then((response) => {
+
+                console.log(response);
+
                 // @ts-ignore
                 if (ROLES_NAME_BY_ID[response.roleId] === ROLES.admin) {
                     return navigate('/users')

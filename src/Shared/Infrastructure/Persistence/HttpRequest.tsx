@@ -6,7 +6,7 @@ import env from "react-dotenv";
 
 export const httpRequest = async(type: string, url: string, body: object | null, accessToken: string | null) => {
 
-    const BASE_URL = (env.ENVIRONMENT === 'production') ? env.URL_API : 'http://localhost:8081/api';
+    const BASE_URL = (env.ENVIRONMENT === 'production') ? env.URL_API : env.URL_API_LOCAL;
 
     const config = {
         headers: {Authorization: (accessToken) ? `Bearer ${(accessToken)}` : 'none'}
