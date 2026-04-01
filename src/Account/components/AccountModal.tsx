@@ -7,7 +7,6 @@ import {getLocalStorageComplexData} from "../../Shared/Infrastructure/Persistenc
 import deleteUserAccount from "../hooks/deleteUserAccount";
 import uuid from "react-uuid";
 import ConfirmModal from "../../components/ConfirmModal";
-import ToastComponent from "../../components/ToastComponent";
 import deleteElement from "../hooks/DeleteElementOfArray";
 import deleteOwnerAccount from "../hooks/deleteOwnerAccount";
 import includeOwnerAccount from "../hooks/includeOwnerAccount";
@@ -161,12 +160,12 @@ const AccountModal = ({show, setShow, account, setAccount, callback, setToast, s
 
                         <div className="row mt-3">
                             <div className="col-md-12">
-                                <label htmlFor="account-name" className={`form-label ${themeContext.theme}-text`}>Name</label>
+                                <label htmlFor="account-name" className={`form-label ${themeContext.theme}-text`}>Nombre</label>
                                 <input type="text" id={'account-name'} className={`form-control ${themeContext.theme}-modal-input`} value={account.name}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeAccountData('name', e.target.value)}/>
                             </div>
                             <div className="col-md-12 mt-3">
-                                <label htmlFor="account-description" className={`form-label ${themeContext.theme}-text`}>Description</label>
+                                <label htmlFor="account-description" className={`form-label ${themeContext.theme}-text`}>Descripción</label>
                                 <textarea id={'account-description'} className={`form-control ${themeContext.theme}-modal-input`}
                                           value={account.description ?? ''}
                                           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => changeAccountData('description', e.target.value)}
@@ -179,13 +178,13 @@ const AccountModal = ({show, setShow, account, setAccount, callback, setToast, s
 
                         {users.length > 0 && <div className="row mt-3">
                             <div className="col-md-12">
-                                <h5>Owners</h5>
+                                <h5>Propietarios</h5>
                                 <div className="row mb-3">
                                     <div className="col-md-10">
-                                        <input type="text" className="form-control" placeholder={'invite an other user by email'}/>
+                                        <input type="text" className="form-control" placeholder={'Invitar usuario por email'}/>
                                     </div>
                                     <div className="col-md-2 d-grid gap-2">
-                                        <button className="btn btn-primary">Send</button>
+                                        <button className="btn btn-primary">Enviar</button>
                                     </div>
                                 </div>
                                 {users.length > 0 && users.map((user: UserInterface) => {
@@ -204,7 +203,7 @@ const AccountModal = ({show, setShow, account, setAccount, callback, setToast, s
                                                         <button className={'btn ' + styleButton} onClick={() => {
                                                             (isAdmin) ? deleteOwner(user) : includeOwner(user)
                                                         }}>
-                                                            {isAdmin ? "Admin" : "No admin"}
+                                                            {isAdmin ? "Admin" : "Sin admin"}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -227,8 +226,8 @@ const AccountModal = ({show, setShow, account, setAccount, callback, setToast, s
                 </div>
             </div>
             <ConfirmModal
-                title={"Delete user"}
-                message={`Are you sure to delete ${account.name}?`}
+                title={"Eliminar usuario"}
+                message={`¿Seguro que quieres eliminar a este usuario de "${account.name}"?`}
                 callback={deleteUser}
                 show={deleteShowModal}
                 setShow={setDeleteShowModal}

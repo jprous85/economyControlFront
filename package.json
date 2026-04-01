@@ -58,10 +58,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-dotenv && react-scripts start",
-    "build": "react-dotenv && react-scripts build",
-    "test": "react-dotenv && react-scripts test",
-    "eject": "react-dotenv && react-scripts eject",
+    "start": "react-dotenv && node scripts/fix-env-path.js && react-scripts start",
+    "build": "react-dotenv && node scripts/fix-env-path.js && react-scripts build",
+    "test": "react-dotenv && node scripts/fix-env-path.js && react-scripts test",
+    "eject": "react-dotenv && node scripts/fix-env-path.js && react-scripts eject",
     "deploy": "aws s3 sync build/ s3://economycontrol.programandoconcabeza.com --acl public-read",
     "deploy-cloudfront": "aws cloudfront create-invalidation --distribution-id E2AMVG531MTDTD --paths '/*'",
     "client-deploy": "npm run deploy && npm run deploy-cloudfront"

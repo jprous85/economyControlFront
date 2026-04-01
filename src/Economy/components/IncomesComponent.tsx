@@ -35,16 +35,15 @@ interface props {
     setIncome: Function;
 }
 
-const IncomesGroupComponent = (
-    {
-        getEconomyFunction,
-        account,
-        economy,
-        setToast,
-        setToastMessage,
-        income,
-        setIncome,
-    }: props) => {
+const IncomesGroupComponent = ({
+    getEconomyFunction,
+    account,
+    economy,
+    setToast,
+    setToastMessage,
+    income,
+    setIncome,
+}: props) => {
 
     const themeContext = useContext(ThemeContext);
     const localStorage = getLocalStorageComplexData();
@@ -53,11 +52,8 @@ const IncomesGroupComponent = (
     const isOwner = account.ownersAccount.includes(localStorage.userId) || admin;
 
     const [showIncomeModal, setShowIncomeModal] = useState(false);
-
     const [deleteShowModal, setDeleteShowModal] = useState(false);
-
-    const [customFunction, setCustomFunction] = useState<any>(() => {
-    });
+    const [customFunction, setCustomFunction] = useState<any>(() => {});
 
     const [incomes] = useState<any>(economy.economic_management.incomes);
     const categories = Object.keys(incomes);
@@ -67,13 +63,11 @@ const IncomesGroupComponent = (
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-
                 if (incomes[income.category]) {
                     incomes[income.category].push(income);
                 } else {
                     incomes[income.category] = [income];
                 }
-
                 getEconomyFunction();
             }
         })
@@ -84,31 +78,23 @@ const IncomesGroupComponent = (
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-
                 Object.keys(incomes).map((categories: string) => {
                     incomes[categories].map((incomeCore: Incomes, index: number) => {
                         if (incomeCore.uuid === income.uuid) {
-
                             if (categories === income.category) {
                                 incomes[categories][index] = income;
                             } else {
-                                incomes[categories].splice(index, 1); // 2nd parameter means remove one item only
-
-                                if (incomes[categories].length === 0) {
-                                    delete (incomes[categories]);
-                                }
-
+                                incomes[categories].splice(index, 1);
+                                if (incomes[categories].length === 0) delete (incomes[categories]);
                                 if (incomes[income.category]) {
                                     incomes[income.category].push(income);
                                 } else {
                                     incomes[income.category] = [income];
                                 }
                             }
-
                         }
                     });
                 });
-
                 getEconomyFunction();
             }
         })
@@ -119,11 +105,8 @@ const IncomesGroupComponent = (
             if (updateResponse) {
                 setToast(true);
                 setToastMessage(updateResponse.data);
-
                 incomes[income.category].map((incomeCore: Incomes, index: number) => {
-                    if (incomeCore.uuid === income.uuid) {
-                        incomes[income.category][index] = income;
-                    }
+                    if (incomeCore.uuid === income.uuid) incomes[income.category][index] = income;
                 });
                 getEconomyFunction();
             }
@@ -136,14 +119,8 @@ const IncomesGroupComponent = (
                 setToast(true);
                 setToastMessage(createResponse.data);
                 const index = incomes[income.category].indexOf(income);
-                if (index > -1) { // only splice array when item is found
-                    incomes[income.category].splice(index, 1); // 2nd parameter means remove one item only
-                }
-
-                if (incomes[income.category].length === 0) {
-                    delete (incomes[income.category]);
-                }
-
+                if (index > -1) incomes[income.category].splice(index, 1);
+                if (incomes[income.category].length === 0) delete (incomes[income.category]);
                 getEconomyFunction();
             }
         })
@@ -158,7 +135,7 @@ const IncomesGroupComponent = (
         INCOME.uuid = uuid();
         setIncome(INCOME);
         setShowIncomeModal(true);
-        assignFunction(() => createNewIncome)
+        assignFunction(() => createNewIncome);
     }
 
     const updateOldIncome = (income: Incomes) => {
@@ -178,121 +155,87 @@ const IncomesGroupComponent = (
         assignFunction(() => deleteIncomeFunction);
     }
 
-
-    const dispatchFunction = () => {
-        customFunction(economy, income);
-    }
-
-    const assignFunction = (callback: Function) => {
-        setCustomFunction(callback);
-    }
-
-
-    const showIncomes = () => {
-        if (incomes.length === 0) return null;
-
-        return (
-            Object.keys(incomes).map((key: any) => {
-                return (
-                    <div className={`col-md-6 mt-3`} key={key}>
-                        <div className={`card ${themeContext.theme}-card`}>
-                            <div className="card-body">
-                                <BlockSeparator title={key}/>
-                                <DataCategoriesComponent
-                                    items={incomes[key]}
-                                    type={'income'}
-                                    pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
-                                    menuActionOptions={menuActionOptions}
-                                    switchChangePaidStatusOfSpend={null}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                );
-            })
-        )
-    }
-
-    const menuActionOptions = (income: Incomes) => {
-
-        if (!isOwner) return null;
-
-        return (
-            <div className={'row'}>
-                <div className="col-6 text-center">
-                    <a href="#"
-                       className={`btn btn-warning text-end`}
-                       onClick={() => updateOldIncome(income)}
-                    >
-                        <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
-                    </a>
-                </div>
-                <div className="col-6 text-center">
-                    <a href="#"
-                       className={`btn btn-outline-danger text-end`}
-                       onClick={() => deleteSelectedIncome(income)}
-                    >
-                        <FontAwesomeIcon icon={icon({name: 'trash', style: 'solid'})}/>
-                    </a>
-                </div>
-            </div>
-        );
-    }
+    const dispatchFunction = () => customFunction(economy, income);
+    const assignFunction = (callback: Function) => setCustomFunction(callback);
 
     const pinButtonChangeStatusOfFixed = (income: Incomes, index: number) => {
         if (!isOwner) return null;
-
-        const colorPin = (income.fixed) ? themeContext.theme + '-pin-able' : themeContext.theme + '-pin-unable';
-
+        const colorPin = income.fixed ? themeContext.theme + '-pin-able' : themeContext.theme + '-pin-unable';
         return (
-            <div className="col-12 col-sm-1 text-md-center text-sm-start">
-                <TooltipOverlay
-                    key={index}
-                    tooltipText={'Income fixed'}
-                    placement={'bottom'}>
-                                <span>
-                                    <FontAwesomeIcon className={colorPin}
-                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
-                                                     onClick={(e: any) => {
-                                                         changeFixedData(income, 'fixed', !income.fixed);
-                                                     }}
-                                    />
-                                </span>
+            <div key={index} style={{flexShrink: 0, width: 18}}>
+                <TooltipOverlay tooltipText={'Ingreso fijo'} placement={'bottom'}>
+                    <span>
+                        <FontAwesomeIcon className={colorPin}
+                                         icon={icon({name: 'thumbtack', style: 'solid'})}
+                                         onClick={() => changeFixedData(income, 'fixed', !income.fixed)}
+                                         style={{cursor: 'pointer'}}
+                        />
+                    </span>
                 </TooltipOverlay>
-                {(income.fixed) &&
-                <span className={'d-sm-none ms-3 text-muted'}><small>{'this income is fixed'}</small></span>}
             </div>
         );
     }
 
-    const buttonCreateNewIncome = () => {
+    const menuActionOptions = (income: Incomes) => {
         if (!isOwner) return null;
         return (
-            <div>
-                <div className={`card ${themeContext.theme}-card mt-3 mb-3`}>
-                    <div className="card-body">
-                        <div className="d-grid gap-2">
-                            <button type={'button'}
-                                    className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
-                                    onClick={() => createEmptyIncome()}>
-                                <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div className="d-flex gap-1">
+                <a href="#" className="btn btn-sm btn-warning" onClick={() => updateOldIncome(income)}>
+                    <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
+                </a>
+                <a href="#" className="btn btn-sm btn-outline-danger" onClick={() => deleteSelectedIncome(income)}>
+                    <FontAwesomeIcon icon={icon({name: 'trash', style: 'solid'})}/>
+                </a>
             </div>
         );
+    }
+
+    const showIncomes = () => {
+        if (categories.length === 0) return (
+            <p className="text-muted" style={{fontSize: '0.875rem'}}>Sin ingresos aún.</p>
+        );
+        return categories.map((key: any) => {
+            const subtotal = incomes[key].reduce((sum: number, item: Incomes) => sum + Number(item.amount), 0);
+            return (
+                <div className={`${themeContext.theme}-category-panel mb-3 p-3`} key={key}>
+                    <BlockSeparator title={key} subtotal={subtotal}/>
+                    <DataCategoriesComponent
+                        items={incomes[key]}
+                        type={'income'}
+                        pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
+                        menuActionOptions={menuActionOptions}
+                        switchChangePaidStatusOfSpend={null}
+                    />
+                </div>
+            );
+        });
     }
 
     return (
-
         <div>
-            <div className={'row'}>
-                {
-                    showIncomes()
-                }
+            {/* Section header */}
+            <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="d-flex align-items-center gap-3">
+                    <span className={`${themeContext.theme}-text`}
+                          style={{fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em'}}>
+                        Ingresos
+                    </span>
+                    <span className="text-success fw-bold">
+                        {economy.economic_management.totals.totalIncomes.toFixed(2)} €
+                    </span>
+                </div>
+                {isOwner && (
+                    <button type="button"
+                            className="btn btn-sm btn-outline-success"
+                            onClick={createEmptyIncome}>
+                        <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})} className="me-1"/>
+                        Añadir
+                    </button>
+                )}
             </div>
-            {buttonCreateNewIncome()}
+
+            {showIncomes()}
+
             <IncomeModalComponent
                 showIncome={showIncomeModal}
                 setShowIncome={setShowIncomeModal}
@@ -302,8 +245,8 @@ const IncomesGroupComponent = (
                 callback={dispatchFunction}
             />
             <ConfirmModal
-                title={"Delete user"}
-                message={`Are you sure to delete ${income.name}?`}
+                title={"Eliminar ingreso"}
+                message={`¿Seguro que quieres eliminar "${income.name}"?`}
                 callback={dispatchFunction}
                 show={deleteShowModal}
                 setShow={setDeleteShowModal}
@@ -311,8 +254,7 @@ const IncomesGroupComponent = (
                 closeBtn={null}
             />
         </div>
-    )
-        ;
+    );
 }
 
 export default memo(IncomesGroupComponent);

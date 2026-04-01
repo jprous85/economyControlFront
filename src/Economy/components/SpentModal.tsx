@@ -1,5 +1,5 @@
 import SimpleModalDialog from "../../components/SimpleModalDialog";
-import {Expenses, Incomes} from "../interfaces/EconomyInterface";
+import {Expenses} from "../interfaces/EconomyInterface";
 import React, {ChangeEvent, useContext} from "react";
 import Capitalize from "../../Shared/utils/Capitalize";
 import {ThemeContext} from "../../context/themeContext";
@@ -32,7 +32,7 @@ const SpentModalComponent = (
 
     return (
         <SimpleModalDialog
-            title={"Incomes"}
+            title={"Gastos"}
             show={showSpent}
             setShow={setShowSpent}
             callback={callback}
@@ -54,7 +54,7 @@ const SpentModalComponent = (
                                                    changeSpentData('active', (e.target.checked) ? 1 : 0)
                                                }}/>
                                         <label className={`form-check-label ${themeContext.theme}-text`} htmlFor="flexSwitchCheckChecked">
-                                            Active spent
+                                            Gasto activo
                                         </label>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@ const SpentModalComponent = (
                                                    changeSpentData('paid', (e.target.checked) ? 1 : 0)
                                                }}/>
                                         <label className={`form-check-label ${themeContext.theme}-text`} htmlFor="flexSwitchCheckChecked">
-                                            Spent paid
+                                            Gasto pagado
                                         </label>
                                     </div>
                                 </div>
@@ -82,12 +82,12 @@ const SpentModalComponent = (
 
 
                         <div className="col-md-12">
-                            <label htmlFor="income-name" className={`form-label ${themeContext.theme}-text`}>{'Income name'}</label>
+                            <label htmlFor="income-name" className={`form-label ${themeContext.theme}-text`}>Nombre del gasto</label>
                             <input type="text" className={`form-control ${themeContext.theme}-modal-input`} id={'income-name'} value={spent.name}
                                    onChange={(e: ChangeEvent<HTMLInputElement>) => changeSpentData('name', e.target.value)}/>
                         </div>
                         <div className="col-md-12 mt-3">
-                            <label htmlFor="income-category" className={`form-label ${themeContext.theme}-text`}>{'Income Category'}</label>
+                            <label htmlFor="income-category" className={`form-label ${themeContext.theme}-text`}>Categoría del gasto</label>
                             <input className={`form-control ${themeContext.theme}-modal-input`} list={"category-list-choice"} id={'category-list-input'} value={spent.category ?? ''} name={'income-category'}
                                    onChange={(e: ChangeEvent<HTMLInputElement>) => changeSpentData('category', Capitalize(e.target.value))}/>
                             <datalist id={'category-list-choice'}>
@@ -97,7 +97,7 @@ const SpentModalComponent = (
                         </div>
                         <div className="row">
                             <div className="col-md-6 mt-3">
-                                <label htmlFor="income-amount" className={`form-label ${themeContext.theme}-text`}>{'amount'}</label>
+                                <label htmlFor="income-amount" className={`form-label ${themeContext.theme}-text`}>Importe</label>
                                 <input type="number" className={`form-control ${themeContext.theme}-modal-input`} id={'income-name'} value={spent.amount}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeSpentData('amount', e.target.value)}/>
                             </div>

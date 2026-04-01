@@ -41,3 +41,35 @@
 .light-pin-unable {
     color: #afafaf;
 }
+
+.light-category-panel {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-page-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-section-panel {
+    border-left: 3px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-navbar {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.light-login-bg {
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.light-table-row:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}

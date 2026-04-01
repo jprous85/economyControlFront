@@ -1,61 +1,31 @@
 import {EconomyInterface} from "../interfaces/EconomyInterface";
-import {useContext} from "react";
-import {ThemeContext} from "../../context/themeContext";
-
 interface props {
     economy: EconomyInterface
 }
 
 const ResultEconomyBox = ({economy}: props) => {
 
-    const themeContext = useContext(ThemeContext);
+    const {totalIncomes, totalExpenses, totalPaid, pendingToPay, balance} = economy.economic_management.totals;
+    const balanceColor = balance >= 0 ? '#198754' : '#dc3545';
+
+    const pill = (label: string, value: number, valueColor: string) => (
+        <div key={label} className="text-center px-3" style={{borderRight: '1px solid rgba(128,128,128,0.2)'}}>
+            <div className="fw-bold" style={{color: valueColor, fontSize: '1rem'}}>{value.toFixed(2)} €</div>
+            <div className="text-muted" style={{fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.06em'}}>{label}</div>
+        </div>
+    );
 
     return (
-        <div>
-            <div className={`card border-success mb-2 ${themeContext.theme}-card`}>
-                <div className="card-body">
-                    <h6 className={'text-success'}>Totals</h6>
-                    <div className="row mt-3">
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{'Total incomes'}:</strong>&nbsp;&nbsp;</span>
-                        </div>
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalIncomes.toFixed(2)} €</strong></span>
-                        </div>
-                    </div>
-                    <div className="row mt-2">
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{'Total expenses'}:</strong>&nbsp;&nbsp;</span>
-                        </div>
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalExpenses.toFixed(2)} €</strong></span>
-                        </div>
-                    </div>
-                    <div className="row mt-2">
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{'Total paid'}:</strong>&nbsp;&nbsp;</span>
-                        </div>
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.totalPaid.toFixed(2)} €</strong></span>
-                        </div>
-                    </div>
-                    <div className="row mt-2">
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{'Pending to pay'}:</strong>&nbsp;&nbsp;</span>
-                        </div>
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.pendingToPay.toFixed(2)} €</strong></span>
-                        </div>
-                    </div>
-                    <div className="row mt-2">
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{'Balance'}:</strong>&nbsp;&nbsp;</span>
-                        </div>
-                        <div className="col-md-6">
-                            <span className={`${themeContext.theme}-green-text`}><strong>{economy.economic_management.totals.balance.toFixed(2)} €</strong></span>
-                        </div>
-                    </div>
+        <div className="d-flex flex-wrap align-items-center justify-content-md-end gap-0">
+            {pill('Ingresos', totalIncomes, '#198754')}
+            {pill('Gastos', totalExpenses, '#dc3545')}
+            {pill('Pagado', totalPaid, '#0d6efd')}
+            {pill('Pendiente', pendingToPay, '#fd7e14')}
+            <div className="text-center px-3">
+                <div className="fw-bold" style={{color: balanceColor, fontSize: '1.15rem'}}>
+                    {balance >= 0 ? '+' : ''}{balance.toFixed(2)} €
                 </div>
+                <div className="text-muted" style={{fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.06em'}}>Balance</div>
             </div>
         </div>
     );

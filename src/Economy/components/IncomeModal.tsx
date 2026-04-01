@@ -32,7 +32,7 @@ const IncomeModalComponent = (
 
     return (
         <SimpleModalDialog
-            title={"Incomes"}
+            title={"Ingresos"}
             show={showIncome}
             setShow={setShowIncome}
             callback={callback}
@@ -53,19 +53,19 @@ const IncomeModalComponent = (
                                                    changeIncomeData('active', (e.target.checked) ? 1 : 0)
                                                }}/>
                                         <label className={`form-check-label ${themeContext.theme}-text`} htmlFor="flexSwitchCheckChecked">
-                                            Active income
+                                            Ingreso activo
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-12">
-                                <label htmlFor="income-name" className={`form-label ${themeContext.theme}-text`}>{'Income name'}</label>
+                                <label htmlFor="income-name" className={`form-label ${themeContext.theme}-text`}>Nombre del ingreso</label>
                                 <input type="text" className={`form-control ${themeContext.theme}-modal-input`} id={'income-name'} value={income.name}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeIncomeData('name', e.target.value)}/>
                             </div>
 
                             <div className="col-12 mt-3">
-                                <label htmlFor="income-category" className={`form-label ${themeContext.theme}-text`}>{'Income Category'}</label>
+                                <label htmlFor="income-category" className={`form-label ${themeContext.theme}-text`}>Categoría</label>
                                 <input className={`form-control ${themeContext.theme}-modal-input`} list={"category-list-choice"}
                                        id={'category-list-input'} value={income.category ?? ''} name={'income-category'}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeIncomeData('category', Capitalize(e.target.value))}/>
@@ -77,7 +77,7 @@ const IncomeModalComponent = (
                         </div>
                         <div className="row">
                             <div className="col-md-6 mt-3">
-                                <label htmlFor="income-amount" className={`form-label ${themeContext.theme}-text`}>{'amount'}</label>
+                                <label htmlFor="income-amount" className={`form-label ${themeContext.theme}-text`}>Importe</label>
                                 <input type="number" className={`form-control ${themeContext.theme}-modal-input`} id={'income-name'} value={income.amount}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeIncomeData('amount', e.target.value)}/>
                             </div>

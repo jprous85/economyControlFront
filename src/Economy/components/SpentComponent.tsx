@@ -37,16 +37,15 @@ interface props {
     setSpent: Function;
 }
 
-const SpentGroupComponent = (
-    {
-        getEconomyFunction,
-        account,
-        economy,
-        setToast,
-        setToastMessage,
-        spent,
-        setSpent,
-    }: props) => {
+const SpentGroupComponent = ({
+    getEconomyFunction,
+    account,
+    economy,
+    setToast,
+    setToastMessage,
+    spent,
+    setSpent,
+}: props) => {
 
     const themeContext = useContext(ThemeContext);
     const localStorage = getLocalStorageComplexData();
@@ -55,27 +54,25 @@ const SpentGroupComponent = (
     const isOwner = account.ownersAccount.includes(localStorage.userId) || admin;
 
     const [showSpentModal, setShowSpentModal] = useState(false);
-
     const [deleteShowModal, setDeleteShowModal] = useState(false);
-
-    const [customFunction, setCustomFunction] = useState<any>(() => {
-    });
+    const [customFunction, setCustomFunction] = useState<any>(() => {});
 
     const [expenses] = useState<any>(economy.economic_management.expenses);
     const categories = Object.keys(expenses);
+
+    const {totalExpenses, totalPaid, pendingToPay} = economy.economic_management.totals;
+    const paidPercent = totalExpenses > 0 ? Math.min(100, (totalPaid / totalExpenses) * 100) : 0;
 
     const createNewSpent = (economy: EconomyInterface, spent: Expenses) => {
         createSpent(economy, spent).then((createResponse: any) => {
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-
                 if (expenses[spent.category]) {
                     expenses[spent.category].push(spent);
                 } else {
                     expenses[spent.category] = [spent];
                 }
-
                 getEconomyFunction();
             }
         })
@@ -86,20 +83,14 @@ const SpentGroupComponent = (
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
-
                 Object.keys(expenses).map((categories: string) => {
                     expenses[categories].map((spentCore: Expenses, index: number) => {
                         if (spentCore.uuid === spent.uuid) {
-
                             if (categories === spent.category) {
                                 expenses[categories][index] = spent;
                             } else {
-                                expenses[categories].splice(index, 1); // 2nd parameter means remove one item only
-
-                                if (expenses[categories].length === 0) {
-                                    delete (expenses[categories]);
-                                }
-
+                                expenses[categories].splice(index, 1);
+                                if (expenses[categories].length === 0) delete (expenses[categories]);
                                 if (expenses[spent.category]) {
                                     expenses[spent.category].push(spent);
                                 } else {
@@ -110,7 +101,6 @@ const SpentGroupComponent = (
                         }
                     });
                 });
-
                 getEconomyFunction();
             }
         })
@@ -121,7 +111,6 @@ const SpentGroupComponent = (
             if (updateResponse) {
                 setToast(true);
                 setToastMessage(updateResponse.data);
-
                 expenses[spent.category].map((spentCore: Expenses, index: number) => {
                     if (spentCore.uuid === spent.uuid) {
                         expenses[spent.category][index] = spent;
@@ -138,7 +127,6 @@ const SpentGroupComponent = (
             if (updateResponse) {
                 setToast(true);
                 setToastMessage(updateResponse.data);
-
                 expenses[spent.category].map((spentCore: Expenses, index: number) => {
                     if (spentCore.uuid === spent.uuid) {
                         expenses[spent.category][index] = spent;
@@ -150,21 +138,14 @@ const SpentGroupComponent = (
         })
     }
 
-
     const deleteSpentFunction = (economy: EconomyInterface, spent: Expenses) => {
         deleteSpent(economy, spent).then((createResponse: any) => {
             if (createResponse) {
                 setToast(true);
                 setToastMessage(createResponse.data);
                 const index = expenses[spent.category].indexOf(spent);
-                if (index > -1) { // only splice array when item is found
-                    expenses[spent.category].splice(index, 1); // 2nd parameter means remove one item only
-                }
-
-                if (expenses[spent.category].length === 0) {
-                    delete (expenses[spent.category]);
-                }
-
+                if (index > -1) expenses[spent.category].splice(index, 1);
+                if (expenses[spent.category].length === 0) delete (expenses[spent.category]);
                 getEconomyFunction();
             }
         })
@@ -184,7 +165,7 @@ const SpentGroupComponent = (
         SPENT.uuid = uuid();
         setSpent(SPENT);
         setShowSpentModal(true);
-        assignFunction(() => createNewSpent)
+        assignFunction(() => createNewSpent);
     }
 
     const updateOldSpent = (spent: Expenses) => {
@@ -209,51 +190,20 @@ const SpentGroupComponent = (
         assignFunction(() => deleteSpentFunction);
     }
 
-
-    const dispatchFunction = () => {
-        customFunction(economy, spent);
-    }
-
-    const assignFunction = (callback: Function) => {
-        setCustomFunction(callback);
-    }
-
-    const showExpenses = () => {
-
-        if (expenses.length === 0) return null;
-
-        return (
-            Object.keys(expenses).map((key: any) => {
-                return (
-                    <div className={`col-md-6 mt-3`} key={key}>
-                        <div className={`card ${themeContext.theme}-card`}>
-                            <div className="card-body">
-                                <BlockSeparator title={key}/>
-                                <DataCategoriesComponent
-                                    items={expenses[key]}
-                                    type={'spent'}
-                                    pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
-                                    menuActionOptions={menuActionOptions}
-                                    switchChangePaidStatusOfSpend={switchChangePaidStatusOfSpend}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                );
-            })
-        )
-    }
+    const dispatchFunction = () => customFunction(economy, spent);
+    const assignFunction = (callback: Function) => setCustomFunction(callback);
 
     const switchChangePaidStatusOfSpend = (internSpent: Expenses) => {
         if (!isOwner) return null;
         return (
-            <div className="col-3 col-sm-1">
-                <div className="form-check form-switch">
-                    <input className="form-check-input float-end success" type="checkbox"
+            <div style={{flexShrink: 0}}>
+                <div className="form-check form-switch mb-0">
+                    <input className="form-check-input"
+                           type="checkbox"
                            role="switch"
-                           id="account-table-paid" checked={(internSpent.paid)}
+                           checked={Boolean(internSpent.paid)}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                               changeSpentData(internSpent, 'paid', (e.target.checked) ? 1 : 0);
+                               changeSpentData(internSpent, 'paid', e.target.checked ? 1 : 0);
                            }}/>
                 </div>
             </div>
@@ -262,25 +212,18 @@ const SpentGroupComponent = (
 
     const pinButtonChangeStatusOfFixed = (internSpent: Expenses, index: number) => {
         if (!isOwner) return null;
-        const colorPin = (internSpent.fixed) ? themeContext.theme + '-pin-able' : themeContext.theme + '-pin-unable';
-
+        const colorPin = internSpent.fixed ? themeContext.theme + '-pin-able' : themeContext.theme + '-pin-unable';
         return (
-            <div className="col-9 col-sm-1 text-md-center text-sm-start">
-                <TooltipOverlay
-                    key={index}
-                    tooltipText={'Spent fixed'}
-                    placement={'bottom'}>
-                                <span>
-                                    <FontAwesomeIcon className={colorPin}
-                                                     icon={icon({name: 'thumbtack', style: 'solid'})}
-                                                     onClick={(e: any) => {
-                                                         changeFixedData(internSpent, 'fixed', !internSpent.fixed);
-                                                     }}
-                                    />
-                                </span>
+            <div key={index} style={{flexShrink: 0, width: 18}}>
+                <TooltipOverlay tooltipText={'Gasto fijo'} placement={'bottom'}>
+                    <span>
+                        <FontAwesomeIcon className={colorPin}
+                                         icon={icon({name: 'thumbtack', style: 'solid'})}
+                                         onClick={() => changeFixedData(internSpent, 'fixed', !internSpent.fixed)}
+                                         style={{cursor: 'pointer'}}
+                        />
+                    </span>
                 </TooltipOverlay>
-                {(internSpent.fixed) &&
-                <span className={'d-sm-none ms-3 text-muted'}><small>{'this spent is fixed'}</small></span>}
             </div>
         );
     }
@@ -288,53 +231,80 @@ const SpentGroupComponent = (
     const menuActionOptions = (internSpent: Expenses) => {
         if (!isOwner) return null;
         return (
-            <div className={'row'}>
-                <div className="col-6 text-center">
-                    <a href="#"
-                       className="btn btn-warning text-end"
-                       onClick={() => updateOldSpent(internSpent)}
-                    >
-                        <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
-                    </a>
-                </div>
-                <div className="col-6 text-center">
-                    <a href="#"
-                       className="btn btn-outline-danger text-end"
-                       onClick={() => deleteSelectedSpent(internSpent)}
-                    >
-                        <FontAwesomeIcon icon={icon({name: 'trash', style: 'solid'})}/>
-                    </a>
-                </div>
+            <div className="d-flex gap-1">
+                <a href="#" className="btn btn-sm btn-warning" onClick={() => updateOldSpent(internSpent)}>
+                    <FontAwesomeIcon icon={icon({name: 'pencil', style: 'solid'})}/>
+                </a>
+                <a href="#" className="btn btn-sm btn-outline-danger" onClick={() => deleteSelectedSpent(internSpent)}>
+                    <FontAwesomeIcon icon={icon({name: 'trash', style: 'solid'})}/>
+                </a>
             </div>
         );
     }
 
-    const buttonCreateNewSpent = () => {
-        if (!isOwner) return null;
-        return (
-            <div>
-                <div className={`card ${themeContext.theme}-card mt-3`}>
-                    <div className="card-body">
-                        <div className="d-grid gap-2">
-                            <button className={`btn btn-outline-primary ${themeContext.theme}-button-primary`}
-                                    onClick={() => createEmptySpent()}>
-                                <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})}/> Incluir nuevo ingreso
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    const showExpenses = () => {
+        if (categories.length === 0) return (
+            <p className="text-muted" style={{fontSize: '0.875rem'}}>Sin gastos aún.</p>
         );
+        return categories.map((key: any) => {
+            const subtotal = expenses[key].reduce((sum: number, item: Expenses) => sum + Number(item.amount), 0);
+            return (
+                <div className={`${themeContext.theme}-category-panel mb-3 p-3`} key={key}>
+                    <BlockSeparator title={key} subtotal={subtotal}/>
+                    <DataCategoriesComponent
+                        items={expenses[key]}
+                        type={'spent'}
+                        pinButtonChangeStatusOfFixed={pinButtonChangeStatusOfFixed}
+                        menuActionOptions={menuActionOptions}
+                        switchChangePaidStatusOfSpend={switchChangePaidStatusOfSpend}
+                    />
+                </div>
+            );
+        });
     }
 
     return (
         <div>
-            <div className={'row'}>
-                {
-                    showExpenses()
-                }
+            {/* Section header */}
+            <div className="mb-3">
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                    <div className="d-flex align-items-center gap-3">
+                        <span className={`${themeContext.theme}-text`}
+                              style={{fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em'}}>
+                            Gastos
+                        </span>
+                        <span className="text-danger fw-bold">{totalExpenses.toFixed(2)} €</span>
+                    </div>
+                    {isOwner && (
+                        <button type="button"
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={createEmptySpent}>
+                            <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})} className="me-1"/>
+                            Añadir
+                        </button>
+                    )}
+                </div>
+                {totalExpenses > 0 && (
+                    <div>
+                        <div className="progress" style={{height: 4, borderRadius: 2}}>
+                            <div className="progress-bar bg-success"
+                                 role="progressbar"
+                                 style={{width: `${paidPercent}%`}}/>
+                        </div>
+                        <div className="d-flex justify-content-between mt-1">
+                            <small className="text-muted" style={{fontSize: '0.7rem'}}>
+                                Pagado: <span className="text-success fw-semibold">{totalPaid.toFixed(2)} €</span>
+                            </small>
+                            <small className="text-muted" style={{fontSize: '0.7rem'}}>
+                                Pendiente: <span className="text-warning fw-semibold">{pendingToPay.toFixed(2)} €</span>
+                            </small>
+                        </div>
+                    </div>
+                )}
             </div>
-            {buttonCreateNewSpent()}
+
+            {showExpenses()}
+
             <SpentModalComponent
                 showSpent={showSpentModal}
                 setShowSpent={setShowSpentModal}
@@ -344,8 +314,8 @@ const SpentGroupComponent = (
                 callback={dispatchFunction}
             />
             <ConfirmModal
-                title={"Delete user"}
-                message={`Are you sure to delete ${spent.name}?`}
+                title={"Eliminar gasto"}
+                message={`¿Seguro que quieres eliminar "${spent.name}"?`}
                 callback={dispatchFunction}
                 show={deleteShowModal}
                 setShow={setDeleteShowModal}

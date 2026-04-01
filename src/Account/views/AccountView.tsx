@@ -1,4 +1,4 @@
-import {Accordion, Button, Card, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
+import {Col, Dropdown, DropdownButton, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {memo, useCallback, useContext, useEffect, useState} from "react";
 import getOwnerAccounts from "../hooks/getOwnerAccounts";
@@ -15,9 +15,9 @@ import createAccount from "../hooks/createAccount";
 import updateAccount from "../hooks/updateAccount";
 import deleteAccount from "../hooks/deleteAccount";
 import AccountModal from "../components/AccountModal";
-import AlertComponent from "../../components/Alert";
 import {ThemeContext} from "../../context/themeContext";
 import duplicateAccount from "../hooks/duplicateAccount";
+import formatDate from "../../Shared/utils/formatDate";
 
 const INITIAL_ACCOUNT = {
     "id": null,
@@ -34,18 +34,11 @@ const INITIAL_ACCOUNT = {
 const AccountView = () => {
 
     const themeContext = useContext(ThemeContext);
-
-
     const {t} = useTranslation();
-
     const complex = getLocalStorageComplexData();
 
     const [loading, setLoading] = useState(true);
-
-    const [alert, setAlert] = useState({
-        show: false,
-        message: ''
-    });
+    const [search, setSearch] = useState('');
 
     const [toast, setToast] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string>('');
@@ -56,10 +49,7 @@ const AccountView = () => {
 
     const [accounts, setAccounts] = useState<Array<AccountInterface>>([]);
     const [account, setAccount] = useState<AccountInterface>(INITIAL_ACCOUNT);
-
-    const [customFunction, setCustomFunction] = useState<any>(() => {
-    });
-
+    const [customFunction, setCustomFunction] = useState<any>(() => {});
 
     const createNewAccount = (account: AccountInterface) => {
         createAccount(account).then((createResponse: any) => {
@@ -104,7 +94,7 @@ const AccountView = () => {
     const resetAccountValues = () => {
         setAccount(INITIAL_ACCOUNT);
         setCreateOrUpdateShowModal(true);
-        assignFunction(() => createNewAccount)
+        assignFunction(() => createNewAccount);
     }
 
     const updateAccountFunction = useCallback((account: AccountInterface) => {
@@ -123,15 +113,10 @@ const AccountView = () => {
         setAccount(account);
         setDeleteShowModal(true);
         assignFunction(() => deleteSelectedAccount);
-    }, [deleteShowModal])
+    }, [deleteShowModal]);
 
-    const assignFunction = (callback: Function) => {
-        setCustomFunction(callback);
-    }
-
-    const dispatchFunction = () => {
-        customFunction(account);
-    };
+    const assignFunction = (callback: Function) => setCustomFunction(callback);
+    const dispatchFunction = () => customFunction(account);
 
     useEffect(() => {
         getAccountsRequest();
@@ -139,144 +124,225 @@ const AccountView = () => {
 
     const getAccountsRequest = () => {
         if (IsAdmin()) {
-            getAccounts();
+            getAllAccounts().then((r: any) => assignAccounts(r));
         } else {
-            getAccountsByUser();
+            getOwnerAccounts().then((r: any) => assignAccounts(r));
         }
-    }
-
-    const getAccounts = () => {
-        getAllAccounts().then((accountResponse: any) => {
-            assignAccounts(accountResponse);
-        });
-    }
-
-    const getAccountsByUser = () => {
-        getOwnerAccounts().then((accountResponse: any) => {
-            assignAccounts(accountResponse);
-        });
     }
 
     const assignAccounts = (accountResponse: any) => {
         if (accountResponse) {
-            setAlert({
-                show: accountResponse.data.length === 0,
-                message: accountResponse.data.length === 0 ? 'No hay cuentas creadas' : ''
-            });
             setAccounts(accountResponse.data);
             setLoading(false);
         }
     }
 
-    const dropdownMenuOptions = (account: AccountInterface) => {
-        return (
-            <DropdownButton
-                align="end"
-                variant="none"
-                title={
-                    <FontAwesomeIcon className={`${themeContext.theme}-text`}
-                                     icon={icon({name: "ellipsis"})}/>
-                }
-                id="dropdown-menu-align-end"
-            >
-                <Dropdown.Item eventKey="1"
-                               onClick={() => updateAccountFunction(account)}>{t('accounts.view.editBtnAccount')}</Dropdown.Item>
-                <Dropdown.Item eventKey="2"
-                               onClick={() => duplicateAccountFunction(account)}>{t('accounts.view.duplicateBtnAccount')}</Dropdown.Item>
-                <Dropdown.Divider/>
-                <Dropdown.Item eventKey="4"
-                               onClick={() => deleteAccountFunction(account)}>{t('accounts.view.deleteBtnAccount')}</Dropdown.Item>
-            </DropdownButton>
-        );
-    }
+    const filtered = accounts.filter(a =>
+        a.name.toLowerCase().includes(search.toLowerCase())
+    );
 
-    if (!loading) {
-        return (
-            <Row className={'ps-5 pe-4'}>
-                <Col md={12} className={'mt-4'}>
-                    {alert.show && <AlertComponent style={'warning'} message={alert.message}/>}
-                    <Row>
-                        <Col md={12} className={'text-end mt-2 mb-4'}>
-                            <Button variant="primary"
-                                    onClick={() => resetAccountValues()}>{t('accounts.view.newBtnAccount')}</Button>
-                        </Col>
-                        {accounts.map((account: AccountInterface) => {
+    const dropdownMenuOptions = (account: AccountInterface) => (
+        <DropdownButton
+            align="end"
+            variant="none"
+            title={
+                <FontAwesomeIcon className={`${themeContext.theme}-text`}
+                                 icon={icon({name: "ellipsis"})}/>
+            }
+            id={`dropdown-${account.id}`}
+        >
+            <Dropdown.Item onClick={() => updateAccountFunction(account)}>
+                {t('accounts.view.editBtnAccount')}
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => duplicateAccountFunction(account)}>
+                {t('accounts.view.duplicateBtnAccount')}
+            </Dropdown.Item>
+            <Dropdown.Divider/>
+            <Dropdown.Item className="text-danger" onClick={() => deleteAccountFunction(account)}>
+                {t('accounts.view.deleteBtnAccount')}
+            </Dropdown.Item>
+        </DropdownButton>
+    );
 
-                            const users = (JSON.parse(account.users));
-                            const owners = (JSON.parse(account.ownersAccount));
+    if (loading) return <Loading/>;
 
-                            let dropdownMenu = null;
-                            if (owners.includes(complex.userId) || IsAdmin()) {
-                                dropdownMenu = dropdownMenuOptions(account);
+    return (
+        <div className="px-3 px-md-5 mt-4 mb-5">
+
+            {/* Page header */}
+            <div className={`d-flex justify-content-between align-items-end pb-3 mb-4 ${themeContext.theme}-page-header`}>
+                <div>
+                    <h4 className={`${themeContext.theme}-text fw-bold mb-0`}>Cuentas</h4>
+                    <small className="text-muted">{accounts.length} cuenta{accounts.length !== 1 ? 's' : ''}</small>
+                </div>
+                <button className="btn btn-primary btn-sm" onClick={resetAccountValues}>
+                    <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})} className="me-2"/>
+                    Nueva cuenta
+                </button>
+            </div>
+
+            {/* Search */}
+            <div className="mb-4" style={{maxWidth: 360}}>
+                <div className="input-group input-group-sm">
+                    <span className={`input-group-text bg-transparent ${themeContext.theme}-category-panel`}
+                          style={{border: '1px solid rgba(128,128,128,0.2)', borderRight: 'none'}}>
+                        <FontAwesomeIcon icon={icon({name: 'magnifying-glass', style: 'solid'})} className="text-muted"/>
+                    </span>
+                    <input
+                        type="text"
+                        className={`form-control ${themeContext.theme}-modal-input`}
+                        style={{border: '1px solid rgba(128,128,128,0.2)', borderLeft: 'none'}}
+                        placeholder="Buscar cuenta..."
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                    {search && (
+                        <button className="btn btn-outline-secondary btn-sm" onClick={() => setSearch('')}>
+                            <FontAwesomeIcon icon={icon({name: 'xmark', style: 'solid'})}/>
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            {/* Grid */}
+            <Row className="g-3">
+                {filtered.length === 0 && (
+                    <Col xs={12}>
+                        <div className="text-center py-5">
+                            <FontAwesomeIcon
+                                icon={icon({name: 'folder-open', style: 'solid'})}
+                                size="2x"
+                                className="text-muted mb-3"
+                            />
+                            <p className={`${themeContext.theme}-text mb-1`}>
+                                {search ? 'No se encontraron cuentas' : 'No tienes cuentas aún'}
+                            </p>
+                            {search
+                                ? <button className="btn btn-link text-muted p-0" style={{fontSize: '0.85rem'}} onClick={() => setSearch('')}>Limpiar búsqueda</button>
+                                : <button className="btn btn-link p-0" style={{fontSize: '0.85rem'}} onClick={resetAccountValues}>Crear la primera cuenta</button>
                             }
+                        </div>
+                    </Col>
+                )}
 
-                            return (
-                                <Col key={account.id} sm={3} className={'mb-3'}>
-                                    <Card className={`p-2 ${themeContext.theme}-card`}>
-                                        <Card.Body>
-                                            <Row>
-                                                <Col md={12} className={'d-flex justify-content-between'}>
-                                                    <a className={`${themeContext.theme}-link`}
-                                                       href={`/economy/${account.uuid}`}><strong>{account.name}</strong></a>
-                                                    {dropdownMenu}
-                                                </Col>
-                                                <Col md={12} className={'mt-3'}>
-                                                    <Accordion>
-                                                        <Accordion.Item eventKey="0">
-                                                            <Accordion.Header>
-                                                                Description
-                                                            </Accordion.Header>
-                                                            <Accordion.Body
-                                                                className={`${themeContext.theme}-modal-card`}>
-                                                                <span className={`${themeContext.theme}-text`}>
-                                                                    {account.description ?? '---'}
-                                                                </span>
-                                                            </Accordion.Body>
-                                                        </Accordion.Item>
-                                                    </Accordion>
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            );
-                        })}
-                    </Row>
+                {filtered.map((account: AccountInterface) => {
+                    const users = JSON.parse(account.users) as any[];
+                    const owners = JSON.parse(account.ownersAccount) as any[];
+                    const isShared = users.length > 1;
+                    const canManage = owners.includes(complex.userId) || IsAdmin();
+
+                    return (
+                        <Col key={account.id} xs={12} sm={6} md={4} lg={3}>
+                            <div
+                                className={`${themeContext.theme}-category-panel h-100 d-flex flex-column`}
+                                style={{transition: 'box-shadow 0.15s'}}
+                            >
+                                {/* Card top */}
+                                <div className="p-3 flex-grow-1">
+                                    <div className="d-flex justify-content-between align-items-start mb-2">
+                                        <a
+                                            href={`/economy/${account.uuid}`}
+                                            className={`${themeContext.theme}-link fw-bold`}
+                                            style={{fontSize: '0.95rem', textDecoration: 'none', lineHeight: 1.3}}
+                                        >
+                                            {account.name}
+                                        </a>
+                                        {canManage && dropdownMenuOptions(account)}
+                                    </div>
+
+                                    {/* Description — always visible, 2-line clamp */}
+                                    <p
+                                        className="text-muted mb-0"
+                                        style={{
+                                            fontSize: '0.8rem',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical' as any,
+                                            overflow: 'hidden',
+                                            minHeight: '2.4em',
+                                            lineHeight: 1.5
+                                        }}
+                                    >
+                                        {account.description || 'Sin descripción'}
+                                    </p>
+                                </div>
+
+                                {/* Card footer */}
+                                <div
+                                    className="d-flex align-items-center justify-content-between px-3 py-2"
+                                    style={{borderTop: '1px solid rgba(128,128,128,0.1)'}}
+                                >
+                                    <div className="d-flex align-items-center gap-2">
+                                                        {isShared && (
+                                            <span className="badge bg-warning text-dark" style={{fontSize: '0.65rem'}}>Compartida</span>
+                                        )}
+                                        {!account.active && (
+                                            <span className="badge bg-secondary" style={{fontSize: '0.65rem'}}>Inactiva</span>
+                                        )}
+                                        <span className="text-muted" style={{fontSize: '0.72rem'}}>
+                                            <FontAwesomeIcon icon={icon({name: 'user', style: 'solid'})} style={{width: 10}} className="me-1"/>
+                                            {users.length}
+                                        </span>
+                                    </div>
+                                    <span className="text-muted" style={{fontSize: '0.68rem'}}>
+                                        {formatDate(account.created_at)}
+                                    </span>
+                                </div>
+                            </div>
+                        </Col>
+                    );
+                })}
+
+                {/* Add-new card */}
+                <Col xs={12} sm={6} md={4} lg={3}>
+                    <div
+                        className={`${themeContext.theme}-category-panel h-100 d-flex flex-column align-items-center justify-content-center text-muted`}
+                        style={{
+                            minHeight: 130,
+                            cursor: 'pointer',
+                            border: '2px dashed rgba(128,128,128,0.25)',
+                            background: 'transparent',
+                            borderRadius: 8,
+                            transition: 'opacity 0.15s'
+                        }}
+                        onClick={resetAccountValues}
+                    >
+                        <FontAwesomeIcon icon={icon({name: 'plus', style: 'solid'})} size="lg" className="mb-2"/>
+                        <span style={{fontSize: '0.8rem'}}>Nueva cuenta</span>
+                    </div>
                 </Col>
-                <AccountModal
-                    account={account}
-                    setAccount={setAccount}
-                    callback={dispatchFunction}
-                    show={createOrUpdateShowModal}
-                    setShow={setCreateOrUpdateShowModal}
-                    setToast={setToast}
-                    setToastMessage={setToastMessage}
-                />
-                <ConfirmModal
-                    title={"Duplicate account"}
-                    message={`Do you want to duplicate ${account.name}?`}
-                    callback={dispatchFunction}
-                    show={duplicateShowModal}
-                    setShow={setDuplicateShowModal}
-                    saveBtn={'Duplicate'}
-                    closeBtn={null}
-                />
-                <ConfirmModal
-                    title={"Delete account"}
-                    message={`Are you sure to delete ${account.name}?`}
-                    callback={dispatchFunction}
-                    show={deleteShowModal}
-                    setShow={setDeleteShowModal}
-                    saveBtn={null}
-                    closeBtn={null}
-                />
-                <ToastComponent show={toast} setShow={setToast} title={'Users'} message={toastMessage}/>
             </Row>
-        );
-    } else {
-        return <Loading/>
-    }
-}
 
+            <AccountModal
+                account={account}
+                setAccount={setAccount}
+                callback={dispatchFunction}
+                show={createOrUpdateShowModal}
+                setShow={setCreateOrUpdateShowModal}
+                setToast={setToast}
+                setToastMessage={setToastMessage}
+            />
+            <ConfirmModal
+                title={"Duplicar cuenta"}
+                message={`¿Duplicar la cuenta "${account.name}"?`}
+                callback={dispatchFunction}
+                show={duplicateShowModal}
+                setShow={setDuplicateShowModal}
+                saveBtn={'Duplicar'}
+                closeBtn={null}
+            />
+            <ConfirmModal
+                title={"Eliminar cuenta"}
+                message={`¿Seguro que quieres eliminar "${account.name}"?`}
+                callback={dispatchFunction}
+                show={deleteShowModal}
+                setShow={setDeleteShowModal}
+                saveBtn={null}
+                closeBtn={null}
+            />
+            <ToastComponent show={toast} setShow={setToast} title={'Accounts'} message={toastMessage}/>
+        </div>
+    );
+}
 
 export default memo(AccountView);

@@ -40,11 +40,11 @@ const UserModal = ({show, setShow, user, setUser, callback}: props) => {
                             <div className={'col-md-6'}>
                                 <div className="row justify-content-end">
                                     <div className="col-md-6">
-                                        <label htmlFor="user-lang">Lang</label>
+                                        <label htmlFor="user-lang">Idioma</label>
                                         <Form.Select name="" id="user-lang" className={'form-control'}
                                                 value={user.lang}
                                                 onChange={(e: ChangeEvent<HTMLSelectElement>) => changeUserData('lang', e.target.value)}>
-                                            <option>Select a lang</option>
+                                            <option>Seleccionar idioma</option>
                                             {LANG.map((lang: any) => {
                                                 return <option key={lang} value={lang}>{lang}</option>
                                             })}
@@ -65,18 +65,18 @@ const UserModal = ({show, setShow, user, setUser, callback}: props) => {
 
                         <div className="row mt-3">
                             <div className="col-md-4">
-                                <label htmlFor="user-name">Name</label>
+                                <label htmlFor="user-name">Nombre</label>
                                 <input type="text" id={'user-name'} className={'form-control'} value={user.name}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserData('name', e.target.value)}/>
                             </div>
                             <div className="col-md-4">
-                                <label htmlFor="user-first-surname">First Surname</label>
+                                <label htmlFor="user-first-surname">Primer apellido</label>
                                 <input type="text" id={'user-first-surname'} className={'form-control'}
                                        value={user.firstSurname ?? ''}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserData('firstSurname', e.target.value)}/>
                             </div>
                             <div className="col-md-4">
-                                <label htmlFor="user-second-surname">Second Surname</label>
+                                <label htmlFor="user-second-surname">Segundo apellido</label>
                                 <input type="text" id={'user-second-surname'} className={'form-control'}
                                        value={user.secondSurname ?? ''}
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserData('secondSurname', e.target.value)}/>
@@ -91,27 +91,27 @@ const UserModal = ({show, setShow, user, setUser, callback}: props) => {
                                        onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserData('email', e.target.value)}/>
                             </div>
                             <div className="col-md-2">
-                                <label htmlFor="user-age">Age</label>
+                                <label htmlFor="user-age">Edad</label>
                                 <input type="number" min={0} max={100} id={'user-age'} className={'form-control'}
                                        value={user.age ?? 0} onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserData('age', e.target.value)}/>
                             </div>
                             <div className="col-md-3">
-                                <label htmlFor="user-gender">Gender</label>
+                                <label htmlFor="user-gender">Género</label>
                                 <Form.Select name="" id="user-gender" className={'form-control'}
                                              value={user.gender ?? ''}
                                         onChange={(e: ChangeEvent<HTMLSelectElement>) => changeUserData('gender', e.target.value)}>
-                                    <option>Select a gender</option>
+                                    <option>Seleccionar género</option>
                                     {GENDER.map((gender: any) => {
                                         return <option key={gender} value={gender}>{gender}</option>
                                     })}
                                 </Form.Select>
                             </div>
                             <div className="col-md-3">
-                                <label htmlFor="user-role">Gender</label>
+                                <label htmlFor="user-role">Rol</label>
                                 <Form.Select name="" id="user-role" className={'form-control'}
                                              value={user.roleId}
                                         onChange={(e: ChangeEvent<HTMLSelectElement>) => changeUserData('roleId', e.target.value)}>
-                                    <option>Select a gender</option>
+                                    <option>Seleccionar rol</option>
                                     {Object.keys(ROLES_ID_BY_NAME).map((roleName: string) => {
                                         // @ts-ignore
                                         return <option key={roleName} value={ROLES_ID_BY_NAME[roleName]}>{roleName}</option>

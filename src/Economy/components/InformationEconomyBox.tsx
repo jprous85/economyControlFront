@@ -2,6 +2,9 @@ import {EconomyInterface} from "../interfaces/EconomyInterface";
 import {AccountInterface} from "../../Account/interfaces/AccountInterface";
 import React, {useContext} from "react";
 import {ThemeContext} from "../../context/themeContext";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {icon} from "@fortawesome/fontawesome-svg-core/import.macro";
+import formatDate from "../../Shared/utils/formatDate";
 
 interface props {
     account: AccountInterface;
@@ -12,49 +15,36 @@ const InformationEconomyBox = ({account, economy}: props) => {
 
     const themeContext = useContext(ThemeContext);
 
-    if (account.users !== '') {
-        const arrayUsers = JSON.parse(account.users) ?? [];
+    if (account.users === '') return null;
 
-        return (
-            <div>
-                <div className={`card ${themeContext.theme}-card`}>
-                    <div className="card-body">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="row">
-                                    <div className="col-md-10">
-                                        <h4 className={`${themeContext.theme}-text`}>{account.name}</h4>
-                                    </div>
-                                    <div className="col-md-2 text-end">
-                                        {arrayUsers.length > 1 && <span className={'text-warning'}><small><strong>Cuenta compartida</strong></small></span>}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row mt-2">
-                            <div className="col-md-4">
-                                <div className={`col-md-12 ${themeContext.theme}-text`}>
-                                    <span>{'identifier'}: </span><span><small>{account.uuid}</small></span>
-                                </div>
-                                <div className={`col-md-12col-md-12 mt-2 ${themeContext.theme}-text`}>
-                                    <span>{'From'}: </span><span><strong>{economy.start_month}</strong></span></div>
-                                <div className={`col-md-12 mt-2 ${themeContext.theme}-text`}>
-                                    <span>{'To'}: </span><span><strong>{economy.end_month}</strong></span></div>
-                                <div className={`col-md-12 mt-2 ${themeContext.theme}-text`}>
-                                    <span>{'Account created at'}: </span><span>{account.created_at}</span></div>
-                            </div>
-                            <div className="col-md-8">
-                                <div className={`${themeContext.theme}-text`}>
-                                    {account.description}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    const arrayUsers = JSON.parse(account.users) ?? [];
+    const isShared = arrayUsers.length > 1;
+
+    return (
+        <div>
+            <div className="d-flex align-items-center gap-2 mb-1">
+                <h4 className={`${themeContext.theme}-text fw-bold mb-0`}>{account.name}</h4>
+                {isShared && <span className="badge bg-warning text-dark">Compartida</span>}
+            </div>
+            {account.description && (
+                <p className="text-muted mb-2" style={{fontSize: '0.875rem'}}>{account.description}</p>
+            )}
+            <div className="d-flex flex-wrap align-items-center gap-3">
+                <div className="d-flex align-items-center gap-1">
+                    <FontAwesomeIcon icon={icon({name: 'calendar', style: 'solid'})} className="text-secondary" style={{width: 12}}/>
+                    <small className={`${themeContext.theme}-text`}>
+                        <strong>{formatDate(economy.start_month)}</strong>
+                        <span className="text-muted mx-1">→</span>
+                        <strong>{formatDate(economy.end_month)}</strong>
+                    </small>
+                </div>
+                <div className="d-flex align-items-center gap-1">
+                    <FontAwesomeIcon icon={icon({name: 'clock', style: 'solid'})} className="text-secondary" style={{width: 12}}/>
+                    <small className="text-muted">{formatDate(account.created_at)}</small>
                 </div>
             </div>
-        );
-    }
-    return null;
+        </div>
+    );
 }
 
 export default InformationEconomyBox;

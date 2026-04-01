@@ -1,23 +1,17 @@
+import {useContext} from 'react';
 import {ThemeContext} from '../../context/themeContext';
+import '../../Styles/light/baseCss.css';
+import '../../Styles/dark/baseCss.css';
 
-
-const BaseLayout = (props: any) => {
-
-    const {cssStyle, children} = props;
+const BaseLayoutLogin = (props: any) => {
+    const {children} = props;
+    const themeContext = useContext(ThemeContext);
 
     return (
-        <ThemeContext.Consumer>
-            {(theme) => {
-                return (
-                    <div className={'container'}>
-                        <div className="row mt-4">
-                            {children}
-                        </div>
-                    </div>
-                );
-            }}
-        </ThemeContext.Consumer>
+        <div className={`${themeContext.theme}-login-bg`}>
+            {children}
+        </div>
     );
 }
 
-export default BaseLayout;
+export default BaseLayoutLogin;

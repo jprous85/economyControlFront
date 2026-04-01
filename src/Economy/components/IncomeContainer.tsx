@@ -7,7 +7,6 @@ interface props {
     pinButtonChangeStatusOfFixed: Function;
     menuActionOptions: Function;
     index: number;
-
 }
 
 const IncomeContainer = ({income, pinButtonChangeStatusOfFixed, menuActionOptions, index}: props) => {
@@ -15,13 +14,14 @@ const IncomeContainer = ({income, pinButtonChangeStatusOfFixed, menuActionOption
     const themeContext = useContext(ThemeContext);
 
     return (
-        <div className={'row mb-2'} key={index}>
+        <div className="d-flex align-items-center gap-2 py-2"
+             style={{borderBottom: '1px solid rgba(128,128,128,0.1)'}}>
             {pinButtonChangeStatusOfFixed(income, index)}
-            <div className={`col-7 ${themeContext.theme}-text`}><strong>{income.name}</strong></div>
-            <div className={`col-6 col-sm-2 text-end ${themeContext.theme}-text`}>
-                <strong>{Number(income.amount).toFixed(2)} €</strong></div>
-            <div className="col-md-2 col-sm-12">{menuActionOptions(income)}</div>
-            <hr className={'mt-3'}/>
+            <div className={`flex-grow-1 ${themeContext.theme}-text`}><strong>{income.name}</strong></div>
+            <div className="text-success fw-bold" style={{whiteSpace: 'nowrap', minWidth: 75, textAlign: 'right'}}>
+                {Number(income.amount).toFixed(2)} €
+            </div>
+            <div style={{flexShrink: 0}}>{menuActionOptions(income)}</div>
         </div>
     );
 }

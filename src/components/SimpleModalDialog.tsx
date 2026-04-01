@@ -27,17 +27,19 @@ const SimpleModalDialog = ({show, setShow, title, children, callback, saveBtn, c
     return (
         <Modal size="lg" show={show} onHide={handleClose}>
             <Modal.Header className={`${themeContext.theme}-modal-card`} closeButton>
-                <Modal.Title className={`${themeContext.theme}-text`}>{title}</Modal.Title>
+                <Modal.Title className={`${themeContext.theme}-text`} style={{fontSize: '1rem', fontWeight: 600}}>
+                    {title}
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body className={`${themeContext.theme}-modal-card`}>
                 {children}
             </Modal.Body>
-            <Modal.Footer className={`${themeContext.theme}-modal-card`}>
-                <Button variant="secondary" onClick={handleClose}>
-                    {closeBtn ?? 'closeBtn'}
+            <Modal.Footer className={`${themeContext.theme}-modal-card`} style={{gap: 8}}>
+                <Button variant="secondary" size="sm" onClick={handleClose}>
+                    {closeBtn ?? 'Cancelar'}
                 </Button>
-                <Button variant="primary" onClick={() => successResponse()}>
-                    {saveBtn ?? 'saveBtn'}
+                <Button variant="primary" size="sm" onClick={() => successResponse()}>
+                    {saveBtn ?? 'Guardar'}
                 </Button>
             </Modal.Footer>
         </Modal>
